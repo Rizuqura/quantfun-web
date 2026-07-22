@@ -1,0 +1,479 @@
+# SECTION — SINCEREST LETTER
+
+## Objective
+
+Implement the **Sincerest Letter** section exactly as shown in the approved homepage design.
+
+This section introduces the author through a formal editorial letter.
+
+The overall feeling should resemble reading the opening page of an institutional annual report or museum exhibition publication.
+
+This section is directly connected to the Philosophy section below.
+
+The pillar asset visually bridges both sections and must therefore be implemented together with proper layering.
+
+The uploaded homepage design is the highest-priority reference.
+
+Do not redesign.
+
+Do not reinterpret.
+
+Do not modernize.
+
+Implement with pixel-level fidelity.
+
+---
+
+# Existing Components
+
+Do not modify:
+
+- Navbar
+- Hero
+
+This section begins immediately after the Hero section.
+
+---
+
+# Required Assets
+
+Load the following local assets.
+
+```
+public/img/profile-pic.png
+
+public/img/pillar.png
+
+public/img/signature.png
+```
+
+Do not replace them with placeholders.
+
+Do not regenerate them.
+
+Use these exact assets.
+
+---
+
+# Figma Reference
+
+Before implementation, inspect the project's Figma file for spacing, alignment, typography, and proportions.
+
+The Figma API Key has already been provided.
+
+Retrieve it by reading the bottom section of:
+
+```
+Memory/navbar.md
+```
+
+Use the Figma design as the implementation reference whenever spacing or proportions are unclear.
+
+The Figma file takes priority over estimation.
+
+---
+
+# Overall Layout
+
+Desktop only.
+
+The section consists of two connected visual blocks.
+
+Top Block
+
+```
+--------------------------------------------
+
+Profile Image
+
+Sincerest Letter
+
+Body
+
+Signature
+
+--------------------------------------------
+```
+
+Bottom Block
+
+```
+-------------------------------
+
+      Pillar
+
+                 Philosophy
+
+-------------------------------
+```
+
+These two blocks must visually feel like one continuous composition.
+
+The pillar overlaps both sections.
+
+Do not separate them visually.
+
+---
+
+# Background
+
+Top block:
+
+Pure black
+
+```
+#000000
+```
+
+Bottom block:
+
+Pure white
+
+```
+#FFFFFF
+```
+
+No gradients.
+
+No textures.
+
+No decorative effects.
+
+---
+
+# Profile Portrait
+
+Asset
+
+```
+profile-pic.png
+```
+
+Position:
+
+Left.
+
+Large.
+
+Portrait aligned to the bottom of the black section.
+
+Keep the original transparency.
+
+Do not crop.
+
+Do not add borders.
+
+Do not add shadows.
+
+The portrait should softly fade into the background exactly like the design.
+
+---
+
+# Title
+
+Text
+
+```
+SINCEREST LETTER
+```
+
+Typography
+
+Font
+
+Cormorant Garamond
+
+Weight
+
+400
+
+Uppercase
+
+Font size
+
+Approximately 64px
+
+Letter spacing
+
+Slightly expanded.
+
+Color
+
+White.
+
+---
+
+# Subtitle
+
+Text
+
+```
+Introducing me,
+```
+
+Immediately followed by
+
+```
+Ahsan
+```
+
+Typography
+
+"Introducing me,"
+
+Inter
+
+Regular
+
+18px
+
+White
+
+"Ahsan"
+
+Cormorant Garamond
+
+Italic
+
+Approximately 28px
+
+White
+
+The name should appear noticeably larger than the surrounding sentence.
+
+Keep both on the same line.
+
+---
+
+# Body Text
+
+Font
+
+Inter
+
+Weight
+
+300
+
+Size
+
+16px
+
+Color
+
+rgba(255,255,255,0.82)
+
+Line Height
+
+1.8
+
+Text Alignment
+
+Justified
+
+Use the following text exactly.
+
+---
+
+Introducing me, Ahsan
+
+Dear visitors, first of all i would like to appreciate for your visitation to the very creative work of mine, i am currently in management vocation program at Jenderal Soedirman University, Banyumas Regency, Central Java. At this moment, i built my whole interest to integrate and define my own edge.
+
+As a management student, i made interest in economics especially macroeconomic, i am also engage several knowledge and individual-based learning in investment and finance which has been some interest myself quiet intrigued, and as today the Artificial Intelligence appear to be the frontier of our modernity, building exposure to Data Analytics, Data Science, Machine Learning, Mathematics would be an outstanding leverage for facing todays industry and combining them would be my long term-forever interest.
+
+Here i would like to introduce and present all of my projects and works, i share my whole project as journal and evidence for my project-based learning process, and hopefully would be a great fundamental for the next step, monetization.
+
+---
+
+# Signature
+
+Asset
+
+```
+signature.png
+```
+
+Place near the lower-right corner of the black section.
+
+Maintain original aspect ratio.
+
+Do not resize aggressively.
+
+Below the signature include:
+
+```
+Ahsan Rizuqura
+
+Founder, QuantFun Technologies
+```
+
+Typography
+
+Inter
+
+12px
+
+White
+
+Opacity
+
+80%
+
+---
+
+# Pillar
+
+Asset
+
+```
+pillar.png
+```
+
+This is the visual anchor of both sections.
+
+It must overlap the black and white backgrounds.
+
+Approximately 45–50% of the pillar should remain inside the white Philosophy section.
+
+Approximately 50–55% should extend upward into the Letter section.
+
+The pillar should sit slightly left of center.
+
+Do not center it perfectly.
+
+Keep the original transparency.
+
+No additional shadows.
+
+No filters.
+
+No effects.
+
+---
+
+# Layer Order
+
+From back to front
+
+Background
+
+↓
+
+Profile Image
+
+↓
+
+Typography
+
+↓
+
+Signature
+
+↓
+
+Pillar
+
+The pillar must appear above both backgrounds.
+
+---
+
+# Animation
+
+Very subtle.
+
+Fade only.
+
+Profile
+
+Opacity
+
+0 → 1
+
+Duration
+
+700ms
+
+Letter
+
+Opacity
+
+0 → 1
+
+TranslateY
+
+12px
+
+Duration
+
+800ms
+
+Pillar
+
+Opacity
+
+0 → 1
+
+Duration
+
+900ms
+
+No sliding.
+
+No scaling.
+
+No rotation.
+
+No parallax.
+
+---
+
+# Responsive
+
+Desktop implementation only.
+
+Ignore tablet and mobile.
+
+---
+
+# Technical Requirements
+
+Framework
+
+Next.js App Router
+
+Language
+
+TypeScript
+
+Styling
+
+Tailwind CSS
+
+Animation
+
+Framer Motion
+
+No inline styles.
+
+Keep reusable spacing.
+
+---
+
+# Visual Principles
+
+This section should feel like:
+
+- An editorial opening letter.
+- A museum exhibition introduction.
+- A premium institutional publication.
+
+Avoid anything that feels like:
+
+- Blog article
+- SaaS landing page
+- Startup website
+- Personal portfolio template
+
+The final implementation should be visually indistinguishable from the approved design reference.
+
+Preserve the exact proportions, spacing, typography, and composition shown in both the homepage mockup and the Figma reference.

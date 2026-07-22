@@ -1,0 +1,157 @@
+﻿{
+    "document":  {
+                     "id":  "0:0",
+                     "name":  "Document",
+                     "type":  "DOCUMENT",
+                     "scrollBehavior":  "SCROLLS",
+                     "children":  [
+                                      {
+                                          "id":  "0:1",
+                                          "name":  "Main",
+                                          "type":  "CANVAS",
+                                          "scrollBehavior":  "SCROLLS",
+                                          "children":  [
+                                                           {
+                                                               "id":  "1:2",
+                                                               "name":  "Home",
+                                                               "type":  "FRAME",
+                                                               "scrollBehavior":  "SCROLLS",
+                                                               "children":  "                 ",
+                                                               "blendMode":  "PASS_THROUGH",
+                                                               "clipsContent":  true,
+                                                               "background":  "",
+                                                               "fills":  "",
+                                                               "strokes":  "",
+                                                               "strokeWeight":  1.0,
+                                                               "strokeAlign":  "INSIDE",
+                                                               "backgroundColor":  "@{r=1.0; g=1.0; b=1.0; a=1.0}",
+                                                               "layoutGrids":  "",
+                                                               "absoluteBoundingBox":  "@{x=0.0; y=0.0; width=1920.0; height=6736.0}",
+                                                               "absoluteRenderBounds":  "@{x=0.0; y=0.0; width=1920.0; height=6736.0}",
+                                                               "constraints":  "@{vertical=TOP; horizontal=LEFT}",
+                                                               "effects":  "",
+                                                               "interactions":  "",
+                                                               "complexStrokeProperties":  "@{strokeType=BASIC}"
+                                                           },
+                                                           {
+                                                               "id":  "28:84",
+                                                               "name":  "Portfolio",
+                                                               "type":  "FRAME",
+                                                               "scrollBehavior":  "SCROLLS",
+                                                               "children":  "  ",
+                                                               "blendMode":  "PASS_THROUGH",
+                                                               "clipsContent":  true,
+                                                               "background":  "",
+                                                               "fills":  "",
+                                                               "strokes":  "",
+                                                               "strokeWeight":  1.0,
+                                                               "strokeAlign":  "INSIDE",
+                                                               "backgroundColor":  "@{r=1.0; g=1.0; b=1.0; a=1.0}",
+                                                               "layoutGrids":  "",
+                                                               "absoluteBoundingBox":  "@{x=1960.0; y=0.0; width=1920.0; height=1834.0}",
+                                                               "absoluteRenderBounds":  "@{x=1960.0; y=0.0; width=1920.0; height=1834.0}",
+                                                               "constraints":  "@{vertical=TOP; horizontal=LEFT}",
+                                                               "effects":  "",
+                                                               "interactions":  "",
+                                                               "complexStrokeProperties":  "@{strokeType=BASIC}"
+                                                           },
+                                                           {
+                                                               "id":  "4:12",
+                                                               "name":  "image 1",
+                                                               "type":  "RECTANGLE",
+                                                               "scrollBehavior":  "SCROLLS",
+                                                               "blendMode":  "PASS_THROUGH",
+                                                               "fills":  "",
+                                                               "strokes":  "",
+                                                               "strokeWeight":  1.0,
+                                                               "strokeAlign":  "INSIDE",
+                                                               "absoluteBoundingBox":  "@{x=-4634.0; y=-229.0; width=1024.0; height=1536.0}",
+                                                               "absoluteRenderBounds":  "@{x=-4634.0; y=-229.0; width=1024.0; height=1536.0}",
+                                                               "preserveRatio":  true,
+                                                               "targetAspectRatio":  "@{x=1024.0; y=1536.0}",
+                                                               "constraints":  "@{vertical=TOP; horizontal=LEFT}",
+                                                               "effects":  "",
+                                                               "interactions":  "",
+                                                               "complexStrokeProperties":  "@{strokeType=BASIC}"
+                                                           },
+                                                           {
+                                                               "id":  "5:23",
+                                                               "name":  "BREN Equity Research 1",
+                                                               "type":  "RECTANGLE",
+                                                               "scrollBehavior":  "SCROLLS",
+                                                               "blendMode":  "PASS_THROUGH",
+                                                               "fills":  "",
+                                                               "strokes":  "",
+                                                               "strokeWeight":  1.0,
+                                                               "strokeAlign":  "INSIDE",
+                                                               "absoluteBoundingBox":  "@{x=-5817.0; y=-229.0; width=1085.0; height=1536.0}",
+                                                               "absoluteRenderBounds":  "@{x=-5817.0; y=-229.0; width=1085.0; height=1536.0}",
+                                                               "preserveRatio":  true,
+                                                               "targetAspectRatio":  "@{x=1054.0; y=1492.0}",
+                                                               "constraints":  "@{vertical=TOP; horizontal=LEFT}",
+                                                               "effects":  "",
+                                                               "interactions":  "",
+                                                               "complexStrokeProperties":  "@{strokeType=BASIC}"
+                                                           },
+                                                           {
+                                                               "id":  "24:82",
+                                                               "name":  "image 3",
+                                                               "type":  "RECTANGLE",
+                                                               "scrollBehavior":  "SCROLLS",
+                                                               "blendMode":  "PASS_THROUGH",
+                                                               "fills":  "",
+                                                               "strokes":  "",
+                                                               "strokeWeight":  1.0,
+                                                               "strokeAlign":  "INSIDE",
+                                                               "absoluteBoundingBox":  "@{x=-7585.0; y=-439.0; width=1508.0; height=1956.0}",
+                                                               "absoluteRenderBounds":  "@{x=-7585.0; y=-439.0; width=1508.0; height=1956.0}",
+                                                               "preserveRatio":  true,
+                                                               "targetAspectRatio":  "@{x=410.0; y=532.0}",
+                                                               "constraints":  "@{vertical=TOP; horizontal=LEFT}",
+                                                               "effects":  "",
+                                                               "interactions":  "",
+                                                               "complexStrokeProperties":  "@{strokeType=BASIC}"
+                                                           }
+                                                       ],
+                                          "backgroundColor":  {
+                                                                  "r":  0.11764705926179886,
+                                                                  "g":  0.11764705926179886,
+                                                                  "b":  0.11764705926179886,
+                                                                  "a":  1.0
+                                                              },
+                                          "prototypeStartNodeID":  "1:2",
+                                          "flowStartingPoints":  [
+                                                                     {
+                                                                         "nodeId":  "1:2",
+                                                                         "name":  "Start"
+                                                                     }
+                                                                 ],
+                                          "prototypeDevice":  {
+                                                                  "type":  "CUSTOM",
+                                                                  "size":  {
+                                                                               "width":  1920.0,
+                                                                               "height":  1080.0
+                                                                           },
+                                                                  "rotation":  "NONE"
+                                                              }
+                                      }
+                                  ]
+                 },
+    "components":  {
+
+                   },
+    "componentSets":  {
+
+                      },
+    "schemaVersion":  0,
+    "styles":  {
+
+               },
+    "name":  "Quantfun Technologies",
+    "lastModified":  "2026-07-22T08:50:34Z",
+    "thumbnailUrl":  "https://s3-alpha.figma.com/thumbnails/37d3d691-d38c-4857-8e37-3c49467c623a?X-Amz-Algorithm=AWS4-HMAC-SHA256\u0026X-Amz-Credential=AKIAQ4GOSFWCQXAR2JX2%2F20260719%2Fus-west-2%2Fs3%2Faws4_request\u0026X-Amz-Date=20260719T120000Z\u0026X-Amz-Expires=604800\u0026X-Amz-SignedHeaders=host\u0026X-Amz-Signature=8e4a8953829c4c454298756b0367f1cc707f7fc9364a1ad3814f7c0659d7f59e",
+    "version":  "2378968521131960966",
+    "role":  "owner",
+    "editorType":  "figma",
+    "linkAccess":  "view"
+}

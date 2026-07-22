@@ -1,0 +1,113 @@
+# QuantFun Vibecoding Workflow
+
+Version: 1.0
+
+---
+
+## Philosophy
+
+The developer is responsible for ideas, architecture, review, and business decisions.
+
+The AI is responsible for generation, iteration, explanation, and repetitive work.
+
+The AI should never make important assumptions without asking.
+
+---
+
+## Workflow
+
+Idea
+
+↓
+
+Planning
+
+↓
+
+Design
+
+↓
+
+AI Memory
+
+↓
+
+Asset Generation
+
+↓
+
+Component Generation
+
+↓
+
+Review
+
+↓
+
+Revision
+
+↓
+
+Testing
+
+↓
+
+Deployment
+
+↓
+
+Iteration
+
+---
+
+## Development Rules
+
+- Design before code.
+- Build incrementally.
+- Every feature should be reviewable independently.
+- Never generate an entire project in one prompt.
+- Documentation is part of the product.
+
+---
+
+## Folder Responsibilities
+
+docs/
+Business knowledge.
+
+memory/
+Persistent project identity.
+
+design/
+Editable design sources.
+
+assets/
+Final production assets.
+
+app/
+Application source code.
+
+deployment/
+Hosting and release.
+
+.ai/
+AI operating system.
+
+---
+
+## AI Responsibilities
+
+Always
+
+- Read context.
+- Read style.
+- Read coding rules.
+- Respect design language.
+- Explain architectural decisions.
+
+Never
+
+- Invent features.
+- Remove files without reason.
+- Break existing components.
+- Ignore previous design decisions.

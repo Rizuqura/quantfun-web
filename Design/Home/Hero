@@ -1,0 +1,272 @@
+# HERO SECTION — QuantFun Web
+
+## Objective
+
+Implement the Hero section exactly as shown in the approved homepage design.
+
+This document replaces every previous Hero implementation.
+
+The uploaded homepage mockup is the primary and authoritative design reference.
+
+Do not redesign.
+
+Do not reinterpret.
+
+Do not modernize.
+
+The objective is visual fidelity.
+
+The Hero should immediately communicate:
+
+- Institutional
+- Editorial
+- Contemporary Museum
+- Luxury Annual Report
+- Architectural Minimalism
+
+Everything should feel quiet, spacious, and intentional.
+
+---
+
+# Existing Components
+
+The Navbar has already been completed.
+
+Do NOT modify it.
+
+Simply render the Hero beneath the existing Navbar.
+
+---
+
+# Section Structure
+
+```jsx
+<main>
+  <Navbar />
+  <Hero />
+  ...sections
+</main>
+```
+
+The Hero is responsible only for the landing composition.
+
+---
+
+# Hero Height
+
+Desktop only.
+
+Height: 100vh
+
+Minimum height: 900px
+
+The Hero should completely fill the first viewport.
+
+No scrolling should occur before the Hero finishes.
+
+---
+
+# Layout
+
+The Hero consists of two visual layers.
+
+Layer 1: Background illustration
+
+Layer 2: Typography
+
+The illustration sits behind the content.
+
+The typography always stays readable.
+
+---
+
+# Background Illustration
+
+Image source: public/img/bg-hero.png
+
+The image fills the right 2/3 of the viewport (w-2/3).
+
+Alignment: Right center, object-right-top.
+
+The image should naturally overflow beyond the viewport on the right.
+
+Do not contain the image fully.
+
+Do not center it.
+
+No rotation.
+
+No blur.
+
+No floating animation.
+
+No parallax.
+
+No shadow effects (on the image).
+
+The illustration itself is already the visual statement.
+
+---
+
+# Hero Content
+
+Content is left aligned.
+
+Everything begins at the 260px left padding (aligned with navbar).
+
+The content block sits in the left portion of the viewport.
+
+Large whitespace on the right is intentional (occupied by the bg image).
+
+Do not attempt to visually center the content.
+
+---
+
+# Main Heading
+
+Text:
+
+BUILDING CLARITY,
+IN COMPLEXITY.
+
+Typography:
+
+Font: Cormorant Garamond
+
+Weight: 300 (Light)
+
+Style: Uppercase
+
+Font Size: 64px
+
+Letter spacing: 0.16em
+
+Line Height: 1.05
+
+Color: #111111
+
+Drop shadow: 0_-2px_4px rgba(0,0,0,0.12)
+
+The heading should become the strongest visual element on the page.
+
+---
+
+# Supporting Keywords
+
+Immediately below the heading.
+
+Text: Data • Logic • Insight
+
+Font: Cormorant Garamond
+
+Weight: 300 (Light)
+
+Font Size: 24px
+
+Color: #222222
+
+Opacity: 70%
+
+Bullets: black square boxes (8x8px), vertically centered.
+
+Spacing between words: generous (gap-16).
+
+Keep them calm and understated.
+
+---
+
+# Content Position
+
+The content block sits in the upper-middle portion of the Hero.
+
+Navbar (72px) → content is vertically centered via flex.
+
+Main Heading
+
+↓ 40px
+
+Supporting Keywords
+
+Maintain generous whitespace around every element.
+
+Avoid vertical compression.
+
+---
+
+# Animation
+
+Very subtle. Only once on initial page load.
+
+Heading: Opacity 0→1, TranslateY 12px→0. Duration: 2s. Ease: easeIn.
+
+Keywords: Opacity 0→1 (no Y movement). Duration: 2s. Ease: easeIn. Delay: 3s (1s after heading finishes).
+
+Elements stay visible after animation completes (no loop).
+
+Background illustration: Static. No movement.
+
+---
+
+# Component Architecture
+
+components/sections/Hero.tsx
+
+The Hero component should only render presentation.
+
+Do not place navigation logic here.
+
+Keep responsibilities separated.
+
+---
+
+# Technical Requirements
+
+Framework: Next.js (App Router)
+
+Language: TypeScript
+
+Styling: Tailwind CSS
+
+Animation: Framer Motion (minimal usage)
+
+No inline styles.
+
+No hardcoded positioning hacks.
+
+Keep spacing reusable where practical.
+
+---
+
+# Visual Fidelity Rules
+
+The approved homepage mockup is the highest priority.
+
+Implementation order:
+1. Match composition
+2. Match spacing
+3. Match typography
+4. Match illustration scale
+5. Match alignment
+6. Match visual rhythm
+
+Do not add extra decorations.
+Do not invent gradients.
+Do not add glassmorphism.
+Do not add cards.
+Do not add colored accents.
+Do not introduce unnecessary animations.
+
+Every pixel should move closer to the reference image, never further away.
+
+---
+
+# Implementation Notes (2026-07-22)
+
+- Font size adjusted from 96px → 64px per user preference
+- Letter spacing adjusted from 0.08em → 0.16em per user preference
+- Drop shadow added: 0_-2px_4px rgba(0,0,0,0.12)
+- Keywords changed from Inter → Cormorant Garamond, opacity 70%
+- Keywords bullets changed from circles → black squares
+- Keywords gap increased from gap-6 → gap-16
+- Background image reduced from 130% scale → w-2/3 (right 66%)
+- Animation: 2s easeIn for heading, +3s delay for keywords (Framer Motion)

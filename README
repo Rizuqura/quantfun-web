@@ -1,0 +1,81 @@
+# QuantFun Vibecoding OS
+
+Purpose
+
+Provide persistent operating instructions for every AI working on this project.
+
+---
+
+## Reading Order
+
+1. Memory/project-context
+2. Memory/project-vision
+3. Memory/quantfun-webdesign-principals
+4. Design/Home/Navbar
+5. Design/Home/Hero
+6. Design/Home/Sincerest-letter
+
+Never skip this reading order.
+
+---
+
+## Project Status
+
+- **Stage:** Development
+- **Current Sprint:** Homepage
+- **Current Priority:** Sincerest Letter (complete) → Portfolio (next)
+- **Framework:** Next.js 15 + TypeScript + Tailwind CSS 3 + Framer Motion
+- **Build:** ✅ Compiled successfully
+
+---
+
+## Components Built
+
+### Navbar — Final State
+
+- Fixed position, 72px height, black text (#111111) static
+- Logo (150x92) on the left, 10px top margin
+- Page constrained to 260px padding left and right
+- Nav items: About, Portfolio, Research, Network, 209px gap, right-aligned (ml-auto)
+- Inter 13px/400, letter-spacing 0.04em, 80% opacity
+- Hover: scale-125 + opacity-100, 250ms ease
+
+### Hero Section — Final State
+
+- Full viewport (100vh, min 900px), overflow hidden
+- Background image (bg-hero.png) fills right 2/3 of viewport, right-top aligned
+- Headline: "BUILDING CLARITY, / IN COMPLEXITY." — Cormorant Garamond 300, 64px, uppercase, letter-spacing 0.16em, drop-shadow, #111111
+- Keywords: "Data • Logic • Insight" — Cormorant Garamond 300, 24px, #222222, opacity-70, black square bullets
+- Animation: fade + translateY 12px, 2s easeIn (headline), 3s delay (keywords), Framer Motion
+
+### Sincerest Letter — Final State
+
+- Two-block continuous composition: black (#000000) top block + white (#FFFFFF) bottom block
+- Profile image (profile-pic.png) — left column, 45% width, bottom-aligned, 50px offset from bottom
+- Title: "SINCEREST LETTER" — Cormorant Garamond 300, 64px, uppercase, white
+- Subtitle: "Introducing me, Ahsan" — Inter 18px + Cormorant Garamond Italic 28px
+- Body: 3 justified paragraphs, Inter 300, 16px, white, line-height 1.8, max-w 580px
+- Signature asset (signature.png) — right-aligned below body
+- Signature text: "Ahsan Rizqullah / Founder of Quantfun Technologies" — Cormorant Garamond 12px
+- Pillar (pillar.png) — absolute positioned, 50px from left, scale 0.6, bottom-aligned, spans both sections
+- Philosophy heading in bottom white block, content right-aligned (55% width, ml-auto)
+- 64px padding top and bottom on content column
+- Animations: fade-in on pillar only (Framer Motion)
+
+## Structure
+
+- `src/app/` — Next.js App Router pages and layout
+- `src/components/layout/` — Navbar
+- `src/components/sections/` — Hero, SincerestLetter
+- `Design/` — Design specs and references
+- `Memory/` — Persistent project identity and principles
+- `public/img/` — Static image assets
+
+## Commands
+
+```
+npm run dev    Start development server
+npm run build  Production build
+npm run start  Start production server
+npm run lint   Run linter
+```

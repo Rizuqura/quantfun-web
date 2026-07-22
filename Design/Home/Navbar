@@ -1,0 +1,222 @@
+# NAVBAR — QuantFun Web
+
+## Objective
+
+Implement the navigation bar for the QuantFun institutional portfolio website.
+
+The navbar should feel calm, premium, architectural, and almost invisible until users need it.
+
+It should never feel like a SaaS dashboard or startup landing page.
+
+The overall aesthetic follows:
+
+- Editorial Magazine
+- Contemporary Museum
+- Luxury Annual Report
+- Institutional Research
+- Swiss Minimalism
+
+The attached homepage design is the primary visual reference and should be followed as closely as possible.
+
+---
+
+# Layout
+
+Desktop only for now.
+
+Height:
+Approximately 72px.
+
+Content alignment:
+
+Logo on the left, navigation right-aligned.
+
+No CTA button.
+
+No border.
+
+No background when page first loads.
+
+Everything should appear extremely lightweight.
+
+Page is constrained to 260px padding on left and right.
+
+---
+
+# Position
+
+Navbar must be:
+
+position: fixed
+
+Always stay on top while scrolling.
+
+Use smooth transitions.
+
+When scrolling, the navbar should never jump.
+
+---
+
+# Background Behavior
+
+Initial state:
+
+Transparent.
+
+No blur.
+
+No shadow.
+
+No border.
+
+As users scroll:
+
+Keep background transparent.
+
+Do NOT introduce glassmorphism.
+
+Do NOT use colored backgrounds.
+
+The website should feel clean and editorial.
+
+---
+
+# Logo
+
+Use the existing QuantFun logo in the public/img/web-logo.png.
+
+Final size: 150x92px (20% smaller than original Figma, then reduced further 10%).
+
+Keep original proportions.
+
+Margin top: 10px.
+
+Padding left should feel generous (aligned with 260px page padding).
+
+---
+
+# Navigation Items
+
+About
+
+Portfolio
+
+Research
+
+Network
+
+Typography:
+
+Font: Inter
+
+Weight: 400
+
+Size: 13px
+
+Letter spacing: 0.04em (very subtle)
+
+No uppercase.
+
+Opacity: 80% normal, 100% hover.
+
+Spacing between menu items: 209px.
+
+---
+
+# Hover Interaction
+
+Hover scale: 125%.
+
+Opacity transition: 80% → 100%.
+
+Transition: 250ms ease.
+
+No underline.
+
+No background.
+
+No animated indicator.
+
+---
+
+# Adaptive Text Color
+
+Not implemented. Text remains #111111 (black) at all times.
+
+---
+
+# Responsive Behavior
+
+Desktop first.
+
+Mobile navigation will be implemented later.
+
+No hamburger menu yet.
+
+---
+
+# Motion
+
+Subtle.
+
+Professional.
+
+Museum-like.
+
+Never playful.
+
+Transitions should feel almost invisible.
+
+---
+
+# Accessibility
+
+Navigation must remain keyboard accessible.
+
+Visible focus state.
+
+Proper semantic HTML: <nav> <ul> <li> <a>
+
+Use aria-current for active navigation.
+
+---
+
+# Component Architecture
+
+components/layout/Navbar.tsx
+
+---
+
+# Coding Principles
+
+- Use TypeScript.
+- Use Tailwind CSS.
+- No inline styles.
+- Reusable.
+- Clean component separation.
+- Minimal dependencies.
+- Avoid unnecessary re-renders.
+
+---
+
+# Visual Priority
+
+The navbar should disappear visually into the design.
+
+Users should notice the content first.
+
+The navigation should quietly support the experience rather than becoming the focal point.
+
+Think of Apple, BlackRock, modern museums, and architecture studios—not startup landing pages.
+
+---
+
+# Implementation Notes (2026-07-22)
+
+- NAV_ITEMS changed from original "Focus" to "About" per Figma reference
+- Height set to 72px
+- Nav right-aligned with ml-auto (not centered) per user preference
+- 260px page padding on each side to create desired visual width
+- 209px gap between items matching Figma spacing
+- Hover scale-125 added per user request (overrides original "no scaling" rule)
+- Adaptive theme removed — text stays black (#111111) always
