@@ -1,0 +1,120 @@
+.section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  scroll-margin-top: 5rem;
+  color: #111;
+  background:
+    radial-gradient(ellipse at 12% 8%, #ffffff9c, transparent 66%),
+    radial-gradient(ellipse at 86% 95%, #8c8c8c30, transparent 58%),
+    linear-gradient(135deg, #efefed 5%, #e7e7e5 48%, #c8c8c6 100%);
+}
+
+.texture {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+.content {
+  width: min(100%, 1400px);
+  margin-inline: auto;
+  padding: clamp(28px, 4vw, 64px) min(15vw, 210px) clamp(64px, 9vw, 128px);
+}
+
+.heading {
+  margin: 0 0 clamp(24px, 3.4vw, 48px);
+  text-align: center;
+  font-family: "Cormorant Garamond", "Times New Roman", serif;
+  font-size: clamp(44px, 6.5vw, 88px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.1em;
+}
+
+.grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(44px, 12.4vw, 174px);
+  row-gap: clamp(44px, 7.7vw, 108px);
+}
+
+.category {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 20px);
+  min-width: 0;
+}
+
+.sculpture {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: clamp(92px, 13.2vw, 184px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #d9d9d7;
+}
+
+.object {
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+}
+
+.pillar {
+  width: auto;
+  height: 94%;
+  object-fit: contain;
+}
+
+.label {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(14px, 2vw, 27px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+.smallLabel {
+  font-size: clamp(12px, 1.75vw, 24px);
+}
+
+.line {
+  display: block;
+}
+
+@media (max-width: 639px) {
+  .content {
+    padding: 40px 24px 64px;
+  }
+
+  .heading {
+    margin-bottom: 36px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    width: fit-content;
+    margin-inline: auto;
+  }
+
+  .category {
+    gap: 20px;
+  }
+
+  .sculpture {
+    width: 100px;
+  }
+
+  .label,
+  .smallLabel {
+    font-size: 14px;
+  }
+}

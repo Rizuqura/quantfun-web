@@ -14,6 +14,45 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Centered content column — fluid from 1280x720 default up to 1920x1080.
+   Design source is 1920w / 1400 max (260px gutters).
+   At 1280w the same ratio flexes to ~933px content + fluid gutters,
+   so proportions match without horizontal scroll. */
+.container-x {
+  width: 100%;
+  max-width: 1400px;
+  margin-inline: auto;
+  /* 24px at 720p-ish widths -> 64px at 1280 -> 0 inner pad at 1920
+     (gutters come from max-width there) */
+  padding-inline: clamp(1.5rem, 5vw, 4rem);
+}
+
+@media (min-width: 768px) {
+  .container-x {
+    padding-inline: clamp(2rem, 4.5vw, 4rem);
+  }
+}
+
+@media (min-width: 1280px) {
+  .container-x {
+    /* keep content ~93% of viewport until 1400 + gutters fits */
+    max-width: min(1400px, 93vw);
+    padding-inline: clamp(2rem, 3.33vw, 4rem);
+  }
+}
+
+@media (min-width: 1920px) {
+  .container-x {
+    max-width: 1400px;
+    padding-inline: 0;
+  }
+}
+
+/* Fluid vertical rhythm: 720p default is tighter, 1080p gets original air */
+.section-pad {
+  padding-block: clamp(3rem, 2rem + 4vh, 6rem);
+}
+
 body {
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;

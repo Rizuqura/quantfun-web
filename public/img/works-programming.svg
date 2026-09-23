@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 222 189">
+  <defs>
+    <linearGradient id="left"><stop stop-color="#ecece8"/><stop offset="1" stop-color="#c9c9c4"/></linearGradient>
+    <linearGradient id="right"><stop stop-color="#babbb5"/><stop offset="1" stop-color="#959790"/></linearGradient>
+    <filter id="shadow"><feGaussianBlur stdDeviation="4"/></filter>
+    <g id="cube">
+      <path d="M0 0 18 -8 36 0 18 9Z" fill="#fff"/>
+      <path d="M0 0 18 9 18 30 0 21Z" fill="url(#left)"/>
+      <path d="M18 9 36 0 36 21 18 30Z" fill="url(#right)"/>
+      <path d="M1 0 18 8 35 0" fill="none" stroke="#f6f6f3" stroke-width=".7"/>
+    </g>
+  </defs>
+  <ellipse cx="116" cy="168" rx="71" ry="9" fill="#777" opacity=".22" filter="url(#shadow)"/>
+<use href="#cube" x="100" y="89"/>
+<use href="#cube" x="119" y="98"/>
+<use href="#cube" x="138" y="107"/>
+<use href="#cube" x="157" y="116"/>
+<use href="#cube" x="81" y="98"/>
+<use href="#cube" x="100" y="107"/>
+<use href="#cube" x="119" y="116"/>
+<use href="#cube" x="138" y="125"/>
+<use href="#cube" x="62" y="107"/>
+<use href="#cube" x="81" y="116"/>
+<use href="#cube" x="100" y="125"/>
+<use href="#cube" x="119" y="134"/>
+<use href="#cube" x="43" y="116"/>
+<use href="#cube" x="62" y="125"/>
+<use href="#cube" x="81" y="134"/>
+<use href="#cube" x="100" y="143"/>
+<use href="#cube" x="100" y="65"/>
+<use href="#cube" x="119" y="74"/>
+<use href="#cube" x="138" y="83"/>
+<use href="#cube" x="81" y="74"/>
+<use href="#cube" x="100" y="83"/>
+<use href="#cube" x="119" y="92"/>
+<use href="#cube" x="62" y="83"/>
+<use href="#cube" x="81" y="92"/>
+<use href="#cube" x="100" y="101"/>
+<use href="#cube" x="100" y="41"/>
+<use href="#cube" x="119" y="50"/>
+<use href="#cube" x="81" y="50"/>
+<use href="#cube" x="100" y="59"/>
+<use href="#cube" x="100" y="17"/>
+</svg>

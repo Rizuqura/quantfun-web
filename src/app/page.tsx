@@ -1,5 +1,6 @@
 import Hero from "@/components/sections/Hero";
 import SincerestLetter from "@/components/sections/SincerestLetter";
+import Works from "@/components/sections/Works";
 
 export default function Home() {
   return (
@@ -7,29 +8,17 @@ export default function Home() {
       <Hero />
       <SincerestLetter />
 
-      <section
-        id="portfolio"
-        className="h-screen flex items-center justify-center bg-[#f8f8f8]"
-      >
-        <div className="max-w-3xl mx-auto px-8">
-          <h2 className="text-4xl sm:text-5xl font-medium tracking-tight text-[#111111]">
-            Works
-          </h2>
-          <p className="mt-6 text-lg text-[#555555] max-w-xl leading-relaxed">
-            Selected projects and research — under construction.
-          </p>
-        </div>
-      </section>
+      <Works />
 
       <section
         id="curriculum-vitae"
-        className="h-screen flex items-center justify-center bg-black"
+        className="min-h-screen lg:min-h-[720px] flex items-center justify-center bg-black section-pad"
       >
-        <div className="max-w-3xl mx-auto px-8">
-          <h2 className="text-4xl sm:text-5xl font-medium tracking-tight text-white">
+        <div className="container-x max-w-3xl">
+          <h2 className="font-medium tracking-tight text-philosophy-title text-white">
             Curriculum Vitae
           </h2>
-          <p className="mt-6 text-lg text-white/60 max-w-xl leading-relaxed">
+          <p className="mt-[clamp(1rem,0.75rem+1.5vh,1.5rem)] text-letter-body text-white/60 max-w-xl leading-relaxed">
             Background, experience, and publications — under construction.
           </p>
         </div>
