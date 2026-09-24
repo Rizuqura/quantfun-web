@@ -58,3 +58,56 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* The browser snapshots both routes so the outgoing page slides away too. */
+html {
+  --page-slide-in: 100%;
+  --page-slide-out: -28%;
+}
+
+html[data-slide-direction="backward"] {
+  --page-slide-in: -100%;
+  --page-slide-out: 28%;
+}
+
+::view-transition-group(root),
+::view-transition-group(navbar) {
+  animation-duration: 520ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::view-transition-old(root) {
+  animation: page-slide-out 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+::view-transition-new(root) {
+  animation: page-slide-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+
+::view-transition-group(navbar) {
+  z-index: 1;
+}
+
+@keyframes page-slide-in {
+  from { transform: translateX(var(--page-slide-in)); }
+  to { transform: translateX(0); }
+}
+
+@keyframes page-slide-out {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(var(--page-slide-out)); opacity: 0.5; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

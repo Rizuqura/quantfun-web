@@ -3,10 +3,10 @@ import PortfolioDonut from "./PortfolioDonut";
 import PortfolioLegend from "./PortfolioLegend";
 import styles from "./Portfolio.module.css";
 
-export default function PortfolioAllocationChart(props: AssetInteraction & { positions: ResolvedPosition[] }) {
-  return <section aria-labelledby="allocation-title" className={styles.allocation}>
-    <div className={styles.sectionTitle}><h2 id="allocation-title">Capital allocation</h2><span>{String(props.positions.length).padStart(2, "0")} positions</span></div>
-    <PortfolioDonut {...props} />
+export default function PortfolioAllocationChart({ id = "allocation-title", title = "Capital allocation", allocationScope = "portfolio", ...props }: AssetInteraction & { positions: ResolvedPosition[]; id?: string; title?: string; allocationScope?: string }) {
+  return <section aria-labelledby={id} className={styles.allocation}>
+    <div className={styles.sectionTitle}><h2 id={id}>{title}</h2><span>{String(props.positions.length).padStart(2, "0")} positions</span></div>
+    <PortfolioDonut {...props} allocationScope={allocationScope} />
     <PortfolioLegend {...props} />
   </section>;
 }

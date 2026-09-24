@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import styles from "./ProjectGallery.module.css";
+import WonnyyIntro from "./WonnyyIntro";
 
 const projects = [
   { id: "01", title: "Understanding the value behind the business.", category: "Finance", discipline: "Equity research", image: "works-ellipse-1.png", name: "Anatomy of a business", description: "An exploration of business quality, competitive advantages, and the assumptions behind a company's valuation.", tags: ["Fundamental analysis", "Valuation"], scope: "A sample company overview, industry landscape, and valuation framework. The final case study will bring together the research process, assumptions, and conclusions." },
@@ -25,32 +26,8 @@ export default function ProjectGallery() {
 
   return (
     <main className={styles.page}>
+      <WonnyyIntro />
       <div className="container-x">
-        <header className={styles.intro}>
-          <div className={styles.eyebrow}>QuantFun / Project archive</div>
-          <div className={styles.introRow}>
-            <h1>Ideas into<br /><em>practice.</em></h1>
-            <div className={styles.introCopy}>
-              <p>A collection of questions explored, systems built, and lessons learned across finance, research, and technology.</p>
-              <span className={styles.preview}>Preview collection · Sample projects</span>
-            </div>
-          </div>
-        </header>
-
-        <section className={styles.featured} aria-labelledby="featured-title">
-          <div className={styles.featuredArt}>
-            <span className={styles.artIndex}>STUDY — 001</span>
-            <div className={styles.orbit} />
-            <img src="/img/works-ellipse-1.png" alt="" />
-            <span className={styles.artCaption}>A foundation for better questions.</span>
-          </div>
-          <div className={styles.featuredCopy}>
-            <span className={styles.eyebrow}>Featured concept / Equity research</span>
-            <h2 id="featured-title">{projects[0].title}</h2>
-            <p>{projects[0].description}</p>
-            <a href="#project-01" className={styles.textLink} onClick={() => { setCategory("All projects"); setQuery(""); }}>Explore the project <span aria-hidden="true">↗</span></a>
-          </div>
-        </section>
 
         <section className={styles.collection} aria-labelledby="collection-title">
           <div className={styles.collectionHeader}>

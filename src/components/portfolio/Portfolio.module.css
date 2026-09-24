@@ -145,3 +145,29 @@
 @media (prefers-reduced-motion: reduce) {
   .page *, .page *::before, .page *::after { transition: none !important; scroll-behavior: auto !important; }
 }
+
+.strategySection { margin-top: clamp(56px, 7vw, 100px); border-top: 1px solid var(--line); padding-top: 32px; }
+.strategyHeading { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 32px; }
+.strategyHeading h2 { font-size: clamp(32px, 4vw, 54px); line-height: 1.2; font-weight: 300; margin-top: 12px; }
+.strategyShare { display: flex; flex-direction: column; gap: 8px; text-align: right; }
+.strategyShare strong { font-size: 30px; font-weight: 300; }
+.strategyShare span { font-size: 10px; color: var(--muted); }
+.strategyOverview { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: clamp(28px, 5vw, 72px); align-items: center; }
+.strategyIntro h3, .strategyThesis h3 { font-size: clamp(27px, 3vw, 38px); line-height: 1.3; font-weight: 300; margin: 12px 0 20px; }
+.strategyIntro > p:not(:first-child), .strategyThesis > p:not(:first-child), .outlookGrid p { font-size: 13px; line-height: 1.9; color: #c4cac6; }
+.strategyIntro .strategyAllocationNote { font-size: 11px; color: var(--muted); margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--line); }
+.strategyThesis { margin-top: 36px; padding: clamp(24px, 3vw, 42px); background: var(--panel); border: 1px solid var(--line); }
+.strategyThesis > p + p { margin-top: 16px; }
+.strategyThesis .researchNote { font-size: 10px; color: var(--muted); padding-top: 20px; margin-top: 24px; border-top: 1px solid var(--line); }
+.outlookGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; margin: 28px 0; }
+.outlookGrid article { border-top: 1px solid #ffffff30; padding-top: 18px; }
+.outlookGrid h4 { font-size: 13px; font-weight: 500; margin-bottom: 10px; }
+.strategyCards { margin-top: 32px; }
+.strategyCards .carousel { padding-top: 16px; }
+.strategyCards .carouselControls { margin-top: 0; margin-bottom: 18px; }
+@media (max-width: 1100px) { .strategyOverview { grid-template-columns: 1fr; } }
+@media (max-width: 767px) {
+  .strategyHeading { align-items: flex-start; flex-direction: column; }
+  .strategyShare { text-align: left; }
+  .outlookGrid { grid-template-columns: 1fr; gap: 20px; }
+}

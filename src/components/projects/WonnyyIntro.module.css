@@ -1,0 +1,53 @@
+﻿.feature { background: #080b0c; color: #d9d9d1; padding: clamp(140px, 12vw, 180px) 0 70px; font-family: 'Inter', Arial, sans-serif; }
+.container { width: calc(100% - 12%); max-width: 1416px; margin-inline: auto; }
+.header { border-bottom: 1px solid #343839; }
+.wordmark { font-size: clamp(30px, 4.4vw, 70px); line-height: 1.15; letter-spacing: .29em; font-weight: 400; }
+.byline { font-size: clamp(10px, 1.25vw, 20px); font-weight: 700; text-transform: uppercase; color: #c88c20; margin: 12px 0 56px 5px; }
+.header h1 { font-size: clamp(24px, 2.8vw, 45px); font-weight: 700; line-height: 1.08; letter-spacing: .005em; }
+.subtitle { color: #909696; font-size: clamp(12px, 1.6vw, 25px); line-height: 1.5; margin-top: 28px; }
+.scenes { padding-top: 40px; display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.6fr); column-gap: 48px; }
+.caption { display: flex; flex-direction: column; gap: 18px; align-self: center; padding-right: 20px; }
+.number { color: #c88c20; font-size: clamp(11px, 1.35vw, 21px); font-weight: 700; line-height: 1.5; }
+.caption h2 { font-size: clamp(20px, 2vw, 30px); line-height: 1.3; font-weight: 700; }
+.caption p { color: #949a99; font-size: clamp(13px, 1.15vw, 17px); line-height: 1.8; margin-top: 16px; max-width: 320px; }
+.timestamp { color: #929998; font-size: clamp(10px, 1.15vw, 18px); line-height: 1.7; }
+.frame { display: block; border: 1px solid #535455; border-radius: 8px; overflow: hidden; background: #0c1011; }
+.frame img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; }
+.frame:focus-visible { outline: 2px solid #c88c20; outline-offset: 6px; }
+.footer { display: flex; justify-content: space-between; gap: 30px; border-top: 1px solid #343839; padding-top: 46px; margin-top: clamp(64px, 8vw, 128px); }
+.footerBrand { font-size: clamp(24px, 2.8vw, 44px); font-weight: 700; line-height: 1.2; }
+.footerDescription { color: #949a99; font-size: clamp(12px, 1.6vw, 25px); line-height: 1.5; margin-top: 12px; }
+.motto { color: #c88c20; font-size: clamp(10px, 1.35vw, 21px); font-weight: 700; line-height: 1.5; text-transform: uppercase; padding: 5px 3% 0 0; }
+@media (max-width: 639px) {
+  .feature { padding-bottom: 40px; }
+  .container { width: calc(100% - 40px); }
+  .byline { margin: 10px 0 34px; }
+  .header h1 { font-size: 23px; }
+  .subtitle { margin-top: 20px; padding-bottom: 14px; }
+  .scenes { padding-top: 28px; }
+  .caption { grid-template-columns: 22px minmax(0, 1fr) 30px; gap: 10px; margin-bottom: 18px; }
+  .frame { border-radius: 4px; }
+  .footer { flex-direction: column; gap: 22px; padding-top: 28px; }
+}
+.controls { grid-column: 2; display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 20px; }
+.controls p { color: #c88c20; font-size: 12px; font-variant-numeric: tabular-nums; }
+.controls p span { color: #949a99; margin-left: 16px; }
+.controls > div { display: flex; gap: 10px; }
+.controls button { width: 44px; height: 44px; border: 1px solid #535455; border-radius: 50%; font-size: 22px; }
+.controls button:hover { background: #c88c201a; border-color: #c88c20; }
+.scene { min-width: 0; grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.6fr); column-gap: 48px; }
+.indicators { grid-column: 2; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin-top: 20px; }
+.indicators button { text-align: left; border-top: 2px solid #343839; padding: 14px 0; color: #949a99; font-size: 12px; line-height: 1.6; }
+.indicators button span { display: block; font-size: 10px; margin-bottom: 6px; }
+.indicators button[aria-pressed='true'] { border-color: #c88c20; color: #d9d9d1; }
+.indicators button[aria-pressed='true'] span { color: #c88c20; }
+.scenes button:focus-visible { outline: 2px solid #c88c20; outline-offset: 4px; }
+.frame { touch-action: pan-y; user-select: none; }
+@media (max-width: 767px) {
+  .scenes, .scene { grid-template-columns: minmax(0, 1fr); }
+  .controls, .indicators { grid-column: 1; }
+  .scene .caption { min-height: 150px; padding: 0 0 22px; margin: 0; gap: 10px; }
+  .caption p { max-width: none; margin-top: 8px; }
+  .indicators { gap: 8px; }
+  .indicators button { font-size: 9px; }
+}

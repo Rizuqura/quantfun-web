@@ -49,3 +49,19 @@ test("future snapshots derive missing allocations from IDR without dividing by z
   assert.equal(resolveAllocations([{ ...base, allocation: undefined, valueIDR: 0 }])[0].allocation, 0);
   assert.deepEqual(portfolioTotals([]), { valueIDR: 0, valueUSD: 0 });
 });
+
+const { strategyPositions } = require("../src/lib/portfolio/portfolio-strategies.ts");
+test("strategy groups partition the portfolio and normalize independently", () => {
+  const source = portfolioSnapshot.positions;
+  const permanent = strategyPositions(source, true);
+  const trade = strategyPositions(source, false);
+  assert.deepEqual(permanent.map(p => p.ticker), ["TSM", "VOO", "SCHD", "BTC", "GLD"]);
+  assert.deepEqual(trade.map(p => p.ticker), ["MSTR", "PUMP", "TAO", "COIN", "TSLA"]);
+  assert.deepEqual(portfolioTotals([...permanent, ...trade]), portfolioTotals(source));
+  for (const group of [permanent, trade]) {
+    assert.ok(Math.abs(group.reduce((s, p) => s + p.allocation, 0) - 100) < 1e-9);
+    const total = portfolioTotals(group).valueIDR;
+    for (const position of group) assert.equal(position.allocation, position.valueIDR / total * 100);
+  }
+  assert.equal(source.find(p => p.ticker === "BTC").allocation, 13.48);
+});

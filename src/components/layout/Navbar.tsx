@@ -19,9 +19,10 @@ export default function Navbar() {
       className={`fixed top-0 left-0 right-0 z-50 min-h-nav py-2 flex items-center ${isPortfolio ? "text-[#efefea] bg-[#111313]/95 backdrop-blur-md border-b border-white/10" : "text-[#111111]"} ${isProject ? "bg-[#f3f2ee]/95 backdrop-blur-md border-b border-black/10" : ""}`}
       role="navigation"
       aria-label="Main navigation"
+      style={{ viewTransitionName: "navbar" }}
     >
       <div className="container-x flex items-center gap-6">
-        <a
+        <Link
           href="/"
           className="flex-shrink-0 mt-[clamp(4px,0.5vh+2px,10px)]"
           aria-label="QuantFun home"
@@ -33,7 +34,7 @@ export default function Navbar() {
             height={92}
             className={`block w-[clamp(90px,80px+5vw,150px)] h-auto ${isPortfolio ? "invert" : ""}`}
           />
-        </a>
+        </Link>
 
         <ul className="flex flex-1 flex-wrap items-center justify-end gap-x-[clamp(1.25rem,1rem+3vw,10rem)] gap-y-2 ml-auto">
           {NAV_ITEMS.map((item) => (

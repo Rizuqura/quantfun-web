@@ -3,7 +3,7 @@ import ProjectGallery from "@/components/projects/ProjectGallery";
 
 export const metadata: Metadata = {
   title: "Project | QuantFun Technologies",
-  description: "Explore projects in finance, research, programming, and design.",
+  description: "Meet Wonnyy Terminal: a micro-corporate and data science workspace with an agent marketplace, free model integration and LLM support, by QuantFun.",
 };
 
 export default function ProjectPage() {

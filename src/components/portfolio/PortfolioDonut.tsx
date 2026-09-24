@@ -7,7 +7,7 @@ import { allocationSegments, donutPath, formatAllocation, formatCompactIDR, form
 import styles from "./Portfolio.module.css";
 import AssetLogo from "./AssetLogo";
 
-export default function PortfolioDonut({ positions, activeAsset, onActivate }: AssetInteraction & { positions: ResolvedPosition[] }) {
+export default function PortfolioDonut({ positions, activeAsset, onActivate, allocationScope = "portfolio" }: AssetInteraction & { positions: ResolvedPosition[]; allocationScope?: string }) {
   const reducedMotion = useReducedMotion();
   const totals = portfolioTotals(positions);
   const active = positions.find((position) => position.ticker === activeAsset);
@@ -16,7 +16,7 @@ export default function PortfolioDonut({ positions, activeAsset, onActivate }: A
   return (
     <div className={styles.donutArea}>
       <div className={styles.donut}>
-        <svg viewBox="0 0 400 400" aria-label="Portfolio allocation. Focus a slice to inspect it; press Enter to select its thesis." className={styles.donutSvg}>
+        <svg viewBox="0 0 400 400" aria-label={`${allocationScope} allocation. Focus a slice to inspect it; press Enter to select its thesis.`} className={styles.donutSvg}>
           <circle cx="200" cy="200" r="183" fill="none" stroke="currentColor" strokeOpacity=".07" />
           <circle cx="200" cy="200" r="101" fill="none" stroke="currentColor" strokeOpacity=".07" />
           {segments.map((segment) => {
@@ -30,7 +30,7 @@ export default function PortfolioDonut({ positions, activeAsset, onActivate }: A
                 data-asset={segment.ticker}
                 className={styles.slice}
                 initial={false}
-                animate={{ x: isActive ? offset.x - 200 : 0, y: isActive ? offset.y - 200 : 0, scale: isActive ? 1.015 : 1, opacity: activeAsset && !isActive ? .65 : 1 }}
+                animate={{ x: isActive ? offset.x - 200 : 0, y: isActive ? offset.y - 200 : 0, scale: isActive ? 1.015 : 1, opacity: active && !isActive ? .65 : 1 }}
                 transition={reducedMotion ? { duration: 0 } : { type: "spring", stiffness: 550, damping: 32, mass: .55 }}
                 style={{ transformOrigin: "200px 200px", filter: isActive ? `drop-shadow(0 5px 5px #0008) drop-shadow(0 0 3px ${metadata.color}60)` : "none" }}
                 onPointerEnter={() => onActivate(segment.ticker)} onPointerLeave={() => onActivate(null)}
@@ -48,7 +48,7 @@ export default function PortfolioDonut({ positions, activeAsset, onActivate }: A
             <span className={styles.muted}>{formatIDR(active.valueIDR)}</span>
           </> : <>
             <strong>{formatUSD(totals.valueUSD)}</strong>
-            <span className={styles.eyebrow}>Total Equity</span>
+            <span className={styles.eyebrow}>{allocationScope === "portfolio" ? "Total Equity" : "Group value"}</span>
             <span className={styles.muted}>{formatCompactIDR(totals.valueIDR)}</span>
           </>}
         </div>
@@ -56,7 +56,7 @@ export default function PortfolioDonut({ positions, activeAsset, onActivate }: A
       <div className={styles.tooltipSlot}>
         {active ? <div className={styles.tooltip} role="tooltip">
           <span><b>{assetMetadata[active.ticker].displayName}</b> <span className={styles.muted}>/ {active.ticker}</span></span>
-          <span>{formatAllocation(active.allocation)} of portfolio <span aria-hidden="true">·</span> {formatUSD(active.valueUSD)} <span aria-hidden="true">·</span> {formatIDR(active.valueIDR)}</span>
+          <span>{formatAllocation(active.allocation)} of {allocationScope} <span aria-hidden="true">·</span> {formatUSD(active.valueUSD)} <span aria-hidden="true">·</span> {formatIDR(active.valueIDR)}</span>
         </div> : <p className={styles.chartHint}>Explore a position to see where it fits.<br /><span>Hover, focus, or select an asset.</span></p>}
       </div>
     </div>

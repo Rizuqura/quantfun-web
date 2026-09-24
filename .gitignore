@@ -20,3 +20,6 @@ Thumbs.db
 node_modules/
 .next/
 *.tsbuildinfo
+
+# Local preview and browser verification artifacts
+.tmp/

@@ -19,7 +19,7 @@ export const portfolioSnapshot: PortfolioSnapshot = {
       role: "Macro Hedge", narrative: "Gold is held as a monetary and portfolio hedge against currency debasement, macro uncertainty, inflationary regimes, and periods in which risk assets experience significant stress.", keyFunction: "Portfolio hedge.", status: "Hedge",
     } },
     { ticker: "BTC", valueIDR: 289641, valueUSD: 16.16, allocation: 13.48, thesis: {
-      role: "Crypto Monetary Core", narrative: "Bitcoin is the anchor position of the crypto ecosystem allocation. The thesis is based on scarcity, network adoption, institutional integration, and asymmetric upside within the current crypto cycle.", keyFunction: "Primary crypto conviction.", status: "Active",
+      role: "Permanent Monetary Capital", narrative: "Bitcoin is held across multiple cycles for its scarcity and network-adoption thesis. RN001 supplies historical cycle context, including diminishing returns, rather than a price forecast or a reason to tie this permanent holding to a single cycle.", keyFunction: "Long-term digital monetary exposure.", status: "Core",
     } },
     { ticker: "MSTR", valueIDR: 92175, valueUSD: 5.14, allocation: 4.29, thesis: {
       role: "High-Beta Bitcoin Expression", narrative: "Strategy provides a higher-beta equity expression of the Bitcoin thesis through its Bitcoin-heavy capital structure and corporate strategy. It is intentionally smaller than BTC because its volatility and downside amplification are substantially greater.", keyFunction: "BTC upside amplifier.", status: "Active",

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
+import PageTransitions from "@/components/layout/PageTransitions";
 
 export const metadata: Metadata = {
   title: "QuantFun Technologies",
@@ -15,6 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <PageTransitions />
         <Navbar />
         {children}
       </body>
