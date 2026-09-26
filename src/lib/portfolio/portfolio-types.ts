@@ -1,12 +1,17 @@
-export type Ticker = "TSM" | "VOO" | "SCHD" | "GLD" | "BTC" | "MSTR" | "PUMP" | "TAO" | "COIN" | "TSLA";
-export type Category = "Core Equity" | "Hedge" | "Crypto Ecosystem" | "Position Trade" | "Thematic Equity";
+export type Ticker = "TSM" | "VOO" | "SCHD" | "GLD" | "BTC" | "MSTR" | "PUMP" | "TAO" | "COIN" | "TSLA" | "WLFI" | "CASH";
+
+/** What the instrument is. Descriptive only; it never drives portfolio classification. */
+export type AssetType = "equity" | "etf" | "commodityETF" | "crypto" | "cash";
+
+/** What the position does inside the portfolio. The only two primary buckets. */
+export type PortfolioRole = "core" | "position-trade";
 
 export interface AssetMetadata {
   ticker: Ticker;
   displayName: string;
   color: string;
-  logoPath: string;
-  category: Category;
+  logoPath?: string;
+  assetType: AssetType;
 }
 
 export interface InvestmentThesis {
@@ -23,6 +28,8 @@ export interface InvestmentThesis {
 
 export interface PortfolioPosition {
   ticker: Ticker;
+  /** Functional classification. Independent from AssetMetadata.assetType. */
+  portfolioRole: PortfolioRole;
   valueIDR: number;
   valueUSD: number;
   allocation?: number;

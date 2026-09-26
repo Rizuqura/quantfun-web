@@ -30,7 +30,10 @@ export function allocationSegments(positions: readonly ResolvedPosition[]) {
 
 export function polarPoint(radius: number, angle: number) {
   const radians = angle * Math.PI / 180;
-  return { x: 200 + radius * Math.cos(radians), y: 200 + radius * Math.sin(radians) };
+  // Node and browsers can differ in the final floating-point digit of trig results.
+  // Normalizing coordinates keeps server-rendered SVG paths identical after hydration.
+  const normalizeCoordinate = (value: number) => Number(value.toFixed(6));
+  return { x: normalizeCoordinate(200 + radius * Math.cos(radians)), y: normalizeCoordinate(200 + radius * Math.sin(radians)) };
 }
 
 export function donutPath(start: number, end: number, outer = 166, inner = 112) {

@@ -12,7 +12,7 @@ export default function PortfolioHeader({ snapshot }: { snapshot: PortfolioSnaps
         <p className={styles.headerCaption}>Capital, with conviction.</p>
       </div>
       <div className={styles.headerNumbers}>
-        <div><p className={styles.eyebrow}>Total Equity</p><p className={styles.equity}>{formatUSD(totals.valueUSD)}</p><p className={styles.secondaryValue}>{formatIDR(totals.valueIDR)}</p></div>
+        <div><p className={styles.eyebrow}>Total Portfolio</p><p className={styles.equity}>{formatUSD(totals.valueUSD)}</p><p className={styles.secondaryValue}>{formatIDR(totals.valueIDR)}</p></div>
         <div className={styles.snapshot}><p className={styles.eyebrow}>Snapshot</p><time dateTime={snapshot.date}>{formatSnapshotDate(snapshot.date)}</time><span>Investment record</span></div>
       </div>
     </header>

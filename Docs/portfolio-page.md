@@ -6,25 +6,35 @@ the homepage Works section remains available at `/#portfolio`.
 ## Source and calculations
 
 `src/lib/portfolio/portfolio-data.ts` is the canonical owner-supplied snapshot of
-22 September 2026, with ten positions and the supplied investment thesis copy.
-Totals are calculated from positions: IDR 2,148,455 and USD 119.88. USD totals are
-summed as integer cents. The working FX rate is descriptive; the independently
-rounded supplied USD values are preserved rather than recalculated.
+22 September 2026, with twelve positions (eleven holdings plus derived cash) and the
+supplied investment thesis copy. Totals are calculated from positions: IDR 2,906,328
+and USD 162.16. USD values are derived from IDR at the working FX rate and summed as
+integer cents, so both currencies stay reconciled.
 
-Supplied allocation labels sum to 100.01%. Chart angles normalize these weights
-to 360 degrees; labels retain the supplied values. Omitting a position's optional
-`allocation` derives it from its IDR value divided by total IDR value. Supply all
-allocations consistently, or omit all allocations when using calculated weights.
+Every position carries a `portfolioRole` of `core` or `position-trade`. These are the
+only two buckets: BTC, TSM, VOO, SCHD and GLD are CORE, and MSTR, COIN, TSLA, TAO,
+PUMP, WLFI and CASH are POSITION TRADE. Cash sits inside position trade because it is
+dry powder reserved for tactical opportunities, so there is no separate cash or crypto
+category. `assetMetadata.assetType` stays descriptive (`equity`, `etf`, `commodityETF`,
+`crypto`, `cash`) and never drives classification. Bucket values and shares are
+calculated by `roleBreakdown`; no percentage is hardcoded. Allocations are derived
+from IDR value divided by total IDR value, and chart angles normalize them to 360
+degrees.
 
 ## Updating data
 
-Update `portfolioSnapshot` for a new record. Asset names, categories, colors, and
+Update `portfolioSnapshot` for a new record. Asset names, asset types, colors, and
 local logo paths live in `asset-metadata.ts`. The supplied logos in
 `public/ticker-logo/` are shared by the legend, holdings, thesis cards, and active
-donut center. TSM maps to `TSMC.jpg`; other files use their holding ticker.
-The shared `AssetLogo` component preserves image proportions on a light backdrop
-so dark marks remain readable. Replace a file at the same path or update the
-metadata mapping to change a logo across the entire portfolio.
+donut center. TSM maps to `TSMC.jpg`; other files use their holding ticker. A ticker
+without a supplied mark (CASH) has no `logoPath` and `AssetLogo` renders no image.
+Replace a file at the same path or update the metadata mapping to change a logo
+across the entire portfolio.
+
+`portfolioTotalIDR` in the data file is the owner-supplied portfolio total. Cash is
+derived as that total minus every non-cash position, so a new holding value is
+reconciled automatically as long as the total still covers the sum of the holdings.
+Bucket membership and display order live in `portfolioRoleOrder`.
 
 The server route passes a serializable `PortfolioSnapshot` into the client page.
 An API/database adapter can replace the route's static import with a validated

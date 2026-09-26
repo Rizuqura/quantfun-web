@@ -48,7 +48,7 @@ export default function PortfolioDonut({ positions, activeAsset, onActivate, all
             <span className={styles.muted}>{formatIDR(active.valueIDR)}</span>
           </> : <>
             <strong>{formatUSD(totals.valueUSD)}</strong>
-            <span className={styles.eyebrow}>{allocationScope === "portfolio" ? "Total Equity" : "Group value"}</span>
+            <span className={styles.eyebrow}>{allocationScope === "portfolio" ? "Total portfolio" : "Group value"}</span>
             <span className={styles.muted}>{formatCompactIDR(totals.valueIDR)}</span>
           </>}
         </div>

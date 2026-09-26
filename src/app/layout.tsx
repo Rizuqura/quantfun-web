@@ -6,6 +6,9 @@ import PageTransitions from "@/components/layout/PageTransitions";
 export const metadata: Metadata = {
   title: "QuantFun Technologies",
   description: "Independent research and software engineering",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({
