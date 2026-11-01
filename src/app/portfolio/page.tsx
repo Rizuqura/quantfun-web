@@ -3,8 +3,8 @@ import PortfolioPage from "@/components/portfolio/PortfolioPage";
 import { portfolioSnapshot } from "@/lib/portfolio/portfolio-data";
 
 export const metadata: Metadata = {
-  title: "Portfolio | QuantFun Technologies",
-  description: "Where QuantFun capital is allocated, and why. Investment positions and their underlying theses.",
+  title: "November 2026 Portfolio Factsheet | QuantFun Technologies",
+  description: "QuantFun Technologies monthly portfolio factsheet for November 2026. Total AUM and percentage asset allocation as of November 1, 2026.",
 };
 
 export default function Page() {

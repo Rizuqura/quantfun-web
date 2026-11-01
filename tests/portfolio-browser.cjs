@@ -3,18 +3,25 @@ const path = require('node:path');
 const { spawn } = require('node:child_process');
 const assert = require('node:assert/strict');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const baseURL = process.env.PORTFOLIO_BASE_URL || 'http://localhost:3100';
 
 (async () => {
   fs.mkdirSync(path.resolve('.tmp'), { recursive: true });
-  const deadline = setTimeout(() => { console.error('Browser verification timed out'); process.exit(1); }, 45000);
   const browser = spawn(process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe', [
     '--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check',
-    '--remote-debugging-port=9334', '--user-data-dir=' + path.resolve('.tmp/chrome-profile'), 'about:blank',
+    '--remote-debugging-port=9334', '--user-data-dir=' + path.resolve('.tmp/portfolio-factsheet-chrome'), 'about:blank',
   ], { windowsHide: true, stdio: ['ignore', 'ignore', 'pipe'] });
+  const deadline = setTimeout(() => { browser.kill(); console.error('Browser verification timed out'); process.exit(1); }, 45000);
   let logs = '';
   browser.stderr.on('data', (b) => { logs += b; });
+  browser.on('error', error => { logs += error.message; });
   let ws;
   try {
+    const response = await fetch(baseURL + '/portfolio');
+    assert.equal(response.status, 200);
+    const html = await response.text();
+    assert.doesNotMatch(html, /valueIDR|valueUSD|fxIDRPerUSD|portfolioRole|priceTargets|costBasis|entryDate|thesisState|VOO|SCHD|Vanguard|Schwab/);
+    console.log('Public HTML and disclosure fields verified.');
     let tabs;
     for (let i = 0; i < 25; i++) {
       try { tabs = await (await fetch('http://127.0.0.1:9334/json/list')).json(); break; } catch { await sleep(200); }
@@ -22,19 +29,29 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     if (!tabs) throw new Error('Browser did not start: ' + logs);
     ws = new WebSocket(tabs.find((t) => t.type === 'page').webSocketDebuggerUrl);
     await new Promise((resolve, reject) => { ws.onopen = resolve; ws.onerror = reject; });
+    console.log('Browser connected.');
     let id = 0;
     const pending = new Map();
     const runtimeErrors = [];
     ws.onmessage = ({ data }) => {
       const message = JSON.parse(data);
       if (message.method === 'Runtime.exceptionThrown') runtimeErrors.push(message.params.exceptionDetails.text);
+      if (message.method === 'Runtime.consoleAPICalled' && message.params.type === 'error') {
+        runtimeErrors.push(message.params.args.map(arg => arg.value || arg.description).join(' '));
+      }
       if (message.id && pending.has(message.id)) {
-        const { resolve, reject } = pending.get(message.id);
+        const { resolve, reject, timer } = pending.get(message.id);
+        clearTimeout(timer);
         pending.delete(message.id);
         message.error ? reject(new Error(JSON.stringify(message.error))) : resolve(message.result);
       }
     };
-    const send = (method, params = {}) => new Promise((resolve, reject) => { const key = ++id; pending.set(key, { resolve, reject }); ws.send(JSON.stringify({ id: key, method, params })); });
+    const send = (method, params = {}) => new Promise((resolve, reject) => {
+      const key = ++id;
+      const timer = setTimeout(() => { pending.delete(key); reject(new Error('Browser command timed out: ' + method + '\n' + logs)); }, 10000);
+      pending.set(key, { resolve, reject, timer });
+      ws.send(JSON.stringify({ id: key, method, params }));
+    });
     const evaluate = async (expression) => {
       const result = await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true });
       if (result.exceptionDetails) throw new Error(JSON.stringify(result.exceptionDetails));
@@ -44,93 +61,117 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
       const result = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true });
       fs.writeFileSync(path.resolve('.tmp', name + '.png'), Buffer.from(result.data, 'base64'));
     };
-    await send('Runtime.enable'); await send('Page.enable'); await send('Network.enable'); await send('Log.enable');
+    const checkLabels = async () => {
+      assert.equal(await evaluate('document.documentElement.scrollWidth <= innerWidth'), true, 'page overflows horizontally');
+      assert.equal(await evaluate(`Array.from(document.querySelectorAll('main li button')).every(button => {
+        const [swatch, identity, weight] = Array.from(button.children).map(el => el.getBoundingClientRect());
+        const bounds = button.getBoundingClientRect();
+        return identity.x >= swatch.right && weight.x >= identity.right - 1 &&
+          weight.right <= bounds.right + 1 && identity.width > 0;
+      })`), true, 'allocation labels overlap');
+    };
+    await send('Runtime.enable'); await send('Page.enable');
     await send('Emulation.setFocusEmulationEnabled', { enabled: true });
     await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1100, deviceScaleFactor: 1, mobile: false });
-    await send('Page.navigate', { url: (process.env.PORTFOLIO_BASE_URL || 'http://localhost:3100') + '/portfolio' });
-    for (let i = 0; i < 30; i++) {
-      if (await evaluate('document.querySelectorAll("[data-asset]").length === 12 && document.querySelectorAll("[data-role]").length === 2')) break;
+    await send('Page.navigate', { url: baseURL + '/portfolio' });
+    console.log('Portfolio opened.');
+    for (let i = 0; i < 40; i++) {
+      if (await evaluate('document.querySelectorAll("[data-asset]").length === 6')) break;
       await sleep(200);
     }
-    await sleep(1000);
-    assert.equal(await evaluate('document.querySelectorAll("tbody tr").length'), 12);
-    assert.equal(await evaluate('document.querySelectorAll("svg[aria-label*=allocation]").length'), 3);
-    assert.equal(await evaluate('document.querySelectorAll("[data-role]").length'), 2);
-    assert.equal(await evaluate('document.querySelectorAll("[data-role=core]").length'), 1);
-    assert.equal(await evaluate('document.querySelectorAll("[data-role=position-trade]").length'), 1);
-    assert.equal(await evaluate('document.querySelectorAll("#permanent-capital [data-asset]").length'), 5);
-    assert.equal(await evaluate('document.querySelectorAll("#position-trade [data-asset]").length'), 7);
-    assert.equal(await evaluate('(()=>{const ids=Array.from(document.querySelectorAll("[id]")).map(x=>x.id);return ids.length === new Set(ids).size})()'), true);
-    assert.equal(await evaluate('Array.from(document.images).filter(x=>!x.complete || !x.naturalWidth).length'), 0);
-    assert.equal(await evaluate('document.documentElement.scrollWidth <= innerWidth'), true);
+    await evaluate('Promise.race([document.fonts.ready.then(() => true), new Promise(resolve => setTimeout(() => resolve(false), 3000))])');
+    await sleep(700);
+    assert.match(await evaluate('document.title'), /November 2026 Portfolio Factsheet/);
+    const text = await evaluate('document.querySelector("main").innerText');
+    assert.match(text, /Monthly Portfolio\s+Factsheet/);
+    assert.match(text, /Reporting date: November 1, 2026/);
+    assert.match(text, /Rp2,670,525/);
+    assert.match(text, /USD\s+146\.73/);
+    assert.match(text, /USD equivalent estimated/);
+    assert.equal((text.match(/Rp/g) || []).length, 1);
+    assert.doesNotMatch(text, /Strategic Trade|Trading Strategy|Investment Thesis|Conviction|Valuation|Return Target|CORE|POSITION TRADE/i);
+    const labels = await evaluate('Array.from(document.querySelectorAll("main li button")).map(el => el.innerText.replace(/\\s+/g, " ").trim())');
+    assert.deepEqual(labels, [
+      'S&P500 Diversified index & thematic exposure 33.95%', 'TSM TSMC 20.48%', 'Cash 15.11%',
+      'BTC Bitcoin 14.53%', 'GOOGL Alphabet Class A 8.09%', 'MSTR Strategy Inc. 7.83%',
+    ]);
+    assert.equal(await evaluate('document.querySelectorAll("main svg").length'), 1);
+    assert.equal(await evaluate('document.querySelectorAll("main li img").length'), 6);
+    assert.equal(await evaluate('document.querySelectorAll("[data-chart-logo] image").length'), 6);
+    assert.equal(await evaluate('Array.from(document.querySelectorAll("main li img")).every(img => getComputedStyle(img).borderRadius === "50%")'), true);
+    assert.equal(await evaluate(`Array.from(document.querySelectorAll('[data-chart-logo]')).every(mark => {
+      const bounds = mark.querySelector('circle').getBoundingClientRect();
+      return Array.from(document.querySelectorAll('[data-chart-logo]')).every(other => {
+        if (other === mark) return true;
+        const otherBounds = other.querySelector('circle').getBoundingClientRect();
+        return bounds.right <= otherBounds.left || bounds.left >= otherBounds.right || bounds.bottom <= otherBounds.top || bounds.top >= otherBounds.bottom;
+      });
+    })`), true, 'chart logos must not overlap');
+    assert.equal(await evaluate('document.querySelector("main li:first-child img").getAttribute("src")'), '/ticker-logo/SP500.png');
+    assert.equal(await evaluate('document.querySelector("main a[download]").getAttribute("href")'), '/reports/quantfun-portfolio-2026-11.pdf');
+    assert.equal(await evaluate('Array.from(document.images).filter(x => !x.complete || !x.naturalWidth).length'), 0);
+    await checkLabels();
     await screenshot('portfolio-desktop');
-    const slicePoint = await evaluate(`(()=>{const r=document.querySelector('[data-role=core]').ownerSVGElement.getBoundingClientRect();return {x:r.x+64/400*r.width,y:r.y+171/400*r.height}})()`);
-    await send('Input.dispatchMouseEvent', { type: 'mouseMoved', ...slicePoint });
-    await sleep(350);
-    assert.equal(await evaluate('document.querySelector("[data-role=core]").getAttribute("aria-pressed")'), 'true');
-    assert.notEqual(await evaluate('getComputedStyle(document.querySelector("[data-role=core]")).transform'), 'none');
-    await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 5, y: 5 });
-    await sleep(250);
-    assert.equal(await evaluate('document.querySelector("[role=tooltip]") === null'), true);
-    const roleLegendSelector = 'ul[aria-label="Select a portfolio bucket"] button';
-    await evaluate(`Array.from(document.querySelectorAll('${roleLegendSelector}')).find(b=>b.textContent.includes('CORE')).focus()`);
-    await sleep(650);
-    assert.equal(await evaluate('document.querySelector("[data-role=core]").getAttribute("aria-pressed")'), 'true');
-    assert.equal(await evaluate('document.querySelector("[role=tooltip]").textContent.includes("79.03%")'), true);
-    const positionLegendSelector = 'ul[aria-label="Select a portfolio position"] button';
-    await evaluate(`Array.from(document.querySelectorAll('${positionLegendSelector}')).find(b=>b.textContent.includes('BTC')).focus()`);
-    await sleep(650);
-    assert.equal(await evaluate('document.querySelector("[data-asset=BTC]").getAttribute("aria-pressed")'), 'true');
-    assert.equal(await evaluate('document.querySelector("tbody tr[data-active=true]").textContent.includes("BTC")'), true);
-    assert.equal(await evaluate('document.querySelector("[aria-label=\\"Choose an investment thesis\\"] [aria-pressed=true]").textContent'), 'BTC');
-    assert.equal(await evaluate(`(()=>{const el=document.querySelector('[aria-label="Thesis cards. Swipe or use left and right arrow keys."]');return Math.abs(el.scrollLeft - (el.children[0].offsetLeft-el.children[0].offsetLeft)) < 3})()`), true);
-    await screenshot('portfolio-btc');
-    await evaluate('document.querySelector("[aria-label=\\"Next investment thesis\\"]").click()');
-    await sleep(650);
+    const point = await evaluate(`(() => {
+      const r = document.querySelector('[data-asset=TSM]').ownerSVGElement.getBoundingClientRect();
+      return { x: r.x + 251 / 400 * r.width, y: r.y + 330 / 400 * r.height };
+    })()`);
+    await send('Input.dispatchMouseEvent', { type: 'mouseMoved', ...point });
+    await sleep(150);
     assert.equal(await evaluate('document.querySelector("[data-asset=TSM]").getAttribute("aria-pressed")'), 'true');
-    await evaluate('document.querySelector("[data-asset=CASH]").focus()');
-    await sleep(650);
-    assert.equal(await evaluate('document.querySelector("#position-trade [aria-label=\\"Next investment thesis\\"]").disabled'), true);
-    await evaluate('document.activeElement.blur()');
-    await sleep(200);
-    assert.equal(await evaluate('document.querySelector("[role=tooltip]") === null'), true);
+    await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 2, y: 2 });
+    await evaluate('document.querySelector("[data-asset=GOOGL]").focus()');
+    await sleep(100);
+    assert.equal(await evaluate('document.querySelector("main li:nth-child(5) button").getAttribute("aria-pressed")'), 'true');
+    assert.match(await evaluate('document.querySelector("[aria-live=polite]").innerText'), /8.09%/);
+    await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Escape', code: 'Escape' });
+    assert.equal(await evaluate('document.querySelector("[data-asset=GOOGL]").getAttribute("aria-pressed")'), 'false');
     await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
-    await evaluate(`Array.from(document.querySelectorAll('${positionLegendSelector}')).find(b=>b.textContent.includes('COIN')).click()`);
-    await sleep(250);
-    assert.equal(await evaluate('document.querySelector("#position-trade [aria-label=\\"Choose an investment thesis\\"] [aria-pressed=true]").textContent'), 'COIN');
-    await evaluate(`document.querySelector('[aria-label="Choose an investment thesis"] button').click()`);
-    await sleep(200);
-    const dragSelector = '[aria-label="Thesis cards. Swipe or use left and right arrow keys."]';
-    await evaluate(`document.querySelector('${dragSelector}').scrollIntoView({block:'start',behavior:'instant'})`);
-    const dragRect = await evaluate(`(()=>{const r=document.querySelector('${dragSelector}').getBoundingClientRect();return {x:r.x,y:r.y,width:r.width}})()`);
-    const dragStart = dragRect.x + dragRect.width * .85;
-    const dragY = Math.max(180, dragRect.y + 180);
-    await send('Input.dispatchMouseEvent', {type:'mousePressed',x:dragStart,y:dragY,button:'left',clickCount:1});
-    for(let i=1;i<=12;i++){await send('Input.dispatchMouseEvent',{type:'mouseMoved',x:dragStart-dragRect.width*.7*i/12,y:dragY,button:'left',buttons:1});await sleep(20);}
-    await send('Input.dispatchMouseEvent', {type:'mouseReleased',x:dragStart-dragRect.width*.7,y:dragY,button:'left',clickCount:1});
-    await sleep(650);
-    assert.equal(await evaluate(`document.querySelector('[aria-label="Choose an investment thesis"] [aria-pressed=true]').textContent`), 'VOO');
-    await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
-    await send('Emulation.setTouchEmulationEnabled', { enabled: true });
+    await evaluate('document.querySelector("main li:last-child button").click()');
+    assert.match(await evaluate('document.querySelector("[aria-live=polite]").innerText'), /7.83%/);
+    let printCalls = 0;
+    await evaluate('window.print = () => { window.__printCalls = (window.__printCalls || 0) + 1; }; Array.from(document.querySelectorAll("button")).find(b => b.textContent.includes("Print / Save PDF")).click()');
+    printCalls = await evaluate('window.__printCalls');
+    assert.equal(printCalls, 1, 'export button must open browser print');
+    for (const width of [1024, 768, 390, 320]) {
+      await send('Emulation.setDeviceMetricsOverride', { width, height: 844, deviceScaleFactor: 1, mobile: width < 768 });
+      await checkLabels();
+      if (width === 390) {
+        await send('Emulation.setTouchEmulationEnabled', { enabled: true });
+        await evaluate('document.activeElement.blur(); window.scrollTo({top:0,behavior:"instant"})');
+        await screenshot('portfolio-mobile');
+        await evaluate('document.querySelector("[data-asset=CASH]").scrollIntoView({block:"center",behavior:"instant"})');
+        const cash = await evaluate(`(() => {
+          const r = document.querySelector('[data-asset=CASH]').ownerSVGElement.getBoundingClientRect();
+          const angle = 133 * Math.PI / 180;
+          return { x: r.x + (200 + 140 * Math.cos(angle)) / 400 * r.width, y: r.y + (200 + 140 * Math.sin(angle)) / 400 * r.height };
+        })()`);
+        await send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [cash] });
+        await send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+        await sleep(200);
+        assert.equal(await evaluate('document.querySelector("[data-asset=CASH]").getAttribute("aria-pressed")'), 'true');
+      }
+    }
+    await send('Emulation.setTouchEmulationEnabled', { enabled: false });
+    await send('Emulation.setDeviceMetricsOverride', { width: 794, height: 1123, deviceScaleFactor: 1, mobile: false });
+    await send('Emulation.setEmulatedMedia', { media: 'print' });
     await evaluate('window.scrollTo({top:0,behavior:"instant"})');
-    await sleep(400);
-    assert.equal(await evaluate('document.documentElement.scrollWidth <= innerWidth'), true);
-    await screenshot('portfolio-mobile');
-    await evaluate('document.querySelector("[aria-label=\\"Choose an investment thesis\\"] button").click()');
-    await sleep(200);
-    const viewportSelector = '[aria-label="Thesis cards. Swipe or use left and right arrow keys."]';
-    await evaluate(`document.querySelector('${viewportSelector}').scrollIntoView({block:'start',behavior:'instant'})`);
-    const rect = await evaluate(`(()=>{const r=document.querySelector('${viewportSelector}').getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height}})()`);
-    const y = Math.max(160, rect.y + 150);
-    await send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 340, y }] });
-    for (let i = 1; i <= 12; i++) { await send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 340 - 23 * i, y }] }); await sleep(20); }
-    await send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-    await sleep(800);
-    const swiped = await evaluate('document.querySelector("[aria-label=\\"Choose an investment thesis\\"] [aria-pressed=true]").textContent');
-    assert.notEqual(swiped, 'BTC');
-    assert.equal(await evaluate(`document.querySelector('[data-asset=${swiped}]').getAttribute('aria-pressed')`), 'true');
+    assert.equal(await evaluate('getComputedStyle(document.querySelector("nav")).display'), 'none');
+    assert.equal(await evaluate('document.querySelector("main a[download]").getClientRects().length'), 0);
+    assert.equal(await evaluate('Array.from(document.querySelectorAll("button")).filter(b => b.textContent.includes("Print / Save PDF")).every(b => getComputedStyle(b).display === "none")'), true);
+    assert.equal(await evaluate('Array.from(document.querySelectorAll("[data-asset]")).every(el => getComputedStyle(el).opacity === "1")'), true);
+    assert.equal(await evaluate('Array.from(document.querySelectorAll("[data-asset]")).every(el => getComputedStyle(el).outlineStyle === "none" && getComputedStyle(el).stroke === "none")'), true);
+    await checkLabels();
+    await screenshot('portfolio-print');
+    const pdf = await send('Page.printToPDF', { preferCSSPageSize: true, displayHeaderFooter: false, printBackground: false });
+    const pdfBuffer = Buffer.from(pdf.data, 'base64');
+    fs.writeFileSync(path.resolve('.tmp/portfolio-november-2026.pdf'), pdfBuffer);
+    assert.equal((pdfBuffer.toString('latin1').match(/\/Type\s*\/Page\b/g) || []).length, 1, 'factsheet must fit on one PDF page');
     assert.deepEqual(runtimeErrors, []);
-    console.log(JSON.stringify({ desktop: 'pass', pointerHoverAndLift: 'pass', mouseDrag: 'pass', focusAndCrossComponentSync: 'pass', nextAndBoundary: 'pass', reducedMotion: 'pass', mobileOverflow: 'pass', nativeSwipe: 'pass', swipedTo: swiped, runtimeErrors }, null, 2));
+    console.log(JSON.stringify({
+      contentAndPrivacy: 'pass', desktopAndMobileLabels: 'pass', hoverKeyboardAndTouch: 'pass',
+      reducedMotion: 'pass', exportButton: 'pass', singlePagePDF: 'pass', runtimeErrors,
+    }, null, 2));
   } finally {
     clearTimeout(deadline);
     if (ws) ws.close();

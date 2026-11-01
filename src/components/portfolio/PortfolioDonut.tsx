@@ -1,63 +1,52 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { useId } from "react";
 import { assetMetadata } from "@/lib/portfolio/asset-metadata";
-import type { AssetInteraction, ResolvedPosition } from "@/lib/portfolio/portfolio-types";
-import { allocationSegments, donutPath, formatAllocation, formatCompactIDR, formatIDR, formatUSD, polarPoint, portfolioTotals } from "@/lib/portfolio/portfolio-utils";
+import type { AssetInteraction, PortfolioPosition } from "@/lib/portfolio/portfolio-types";
+import { allocationSegments, donutPath, formatAllocation, polarPoint } from "@/lib/portfolio/portfolio-utils";
 import styles from "./Portfolio.module.css";
-import AssetLogo from "./AssetLogo";
 
-export default function PortfolioDonut({ positions, activeAsset, onActivate, allocationScope = "portfolio" }: AssetInteraction & { positions: ResolvedPosition[]; allocationScope?: string }) {
-  const reducedMotion = useReducedMotion();
-  const totals = portfolioTotals(positions);
+export default function PortfolioDonut({ positions, activeAsset, onActivate }: AssetInteraction & { positions: PortfolioPosition[] }) {
   const active = positions.find((position) => position.ticker === activeAsset);
-  // Paint the raised slice last so its shadow and edges sit above its neighbours.
-  const segments = allocationSegments(positions).sort((a, b) => Number(a.ticker === activeAsset) - Number(b.ticker === activeAsset));
+  const chartId = useId().replace(/:/g, "");
+
   return (
-    <div className={styles.donutArea}>
-      <div className={styles.donut}>
-        <svg viewBox="0 0 400 400" aria-label={`${allocationScope} allocation. Focus a slice to inspect it; press Enter to select its thesis.`} className={styles.donutSvg}>
-          <circle cx="200" cy="200" r="183" fill="none" stroke="currentColor" strokeOpacity=".07" />
-          <circle cx="200" cy="200" r="101" fill="none" stroke="currentColor" strokeOpacity=".07" />
-          {segments.map((segment) => {
-            const metadata = assetMetadata[segment.ticker];
-            const isActive = activeAsset === segment.ticker;
-            const offset = polarPoint(7, segment.midpoint);
-            return (
-              <motion.path key={segment.ticker} d={donutPath(segment.start, segment.end)} fill={metadata.color}
-                role="button" tabIndex={0} aria-pressed={isActive}
-                aria-label={`${segment.ticker}, ${metadata.displayName}, ${formatAllocation(segment.allocation)}, ${formatUSD(segment.valueUSD)}. View investment thesis.`}
-                data-asset={segment.ticker}
-                className={styles.slice}
-                initial={false}
-                animate={{ x: isActive ? offset.x - 200 : 0, y: isActive ? offset.y - 200 : 0, scale: isActive ? 1.015 : 1, opacity: active && !isActive ? .65 : 1 }}
-                transition={reducedMotion ? { duration: 0 } : { type: "spring", stiffness: 550, damping: 32, mass: .55 }}
-                style={{ transformOrigin: "200px 200px", filter: isActive ? `drop-shadow(0 5px 5px #0008) drop-shadow(0 0 3px ${metadata.color}60)` : "none" }}
-                onPointerEnter={() => onActivate(segment.ticker)} onPointerLeave={() => onActivate(null)}
-                onFocus={() => onActivate(segment.ticker)} onBlur={() => onActivate(null)} onClick={() => onActivate(segment.ticker)}
-                onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onActivate(segment.ticker); } if (event.key === "Escape") onActivate(null); }}
-              />
-            );
-          })}
-        </svg>
-        <div className={styles.donutCenter} aria-live="polite" aria-atomic="true">
-          {active ? <>
-            <span className={styles.centerIdentity}><AssetLogo ticker={active.ticker} /><span className={styles.eyebrow}>{active.ticker}</span></span>
-            <strong>{formatAllocation(active.allocation)}</strong>
-            <span className={styles.centerValue}>{formatUSD(active.valueUSD)}</span>
-            <span className={styles.muted}>{formatIDR(active.valueIDR)}</span>
-          </> : <>
-            <strong>{formatUSD(totals.valueUSD)}</strong>
-            <span className={styles.eyebrow}>{allocationScope === "portfolio" ? "Total portfolio" : "Group value"}</span>
-            <span className={styles.muted}>{formatCompactIDR(totals.valueIDR)}</span>
-          </>}
-        </div>
+    <div className={styles.donut}>
+      <svg viewBox="0 0 400 400" role="group" aria-label="Portfolio allocation by asset" className={styles.donutSvg}>
+        {allocationSegments(positions).map((segment, index) => {
+          const metadata = assetMetadata[segment.ticker];
+          const logo = polarPoint(139, segment.midpoint);
+          const clipId = `${chartId}-logo-${index}`;
+          return (
+            <g key={segment.ticker}>
+            <path d={donutPath(segment.start, segment.end)} fill={metadata.color}
+              role="button" tabIndex={0} aria-pressed={activeAsset === segment.ticker}
+              aria-label={`${segment.ticker}, ${metadata.displayName}, ${formatAllocation(segment.allocation)}`}
+              data-asset={segment.ticker} data-muted={Boolean(active && active.ticker !== segment.ticker)}
+              className={styles.slice}
+              onPointerEnter={() => onActivate(segment.ticker)} onPointerLeave={() => onActivate(null)}
+              onFocus={() => onActivate(segment.ticker)} onBlur={() => onActivate(null)} onClick={() => onActivate(segment.ticker)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onActivate(segment.ticker); }
+                if (event.key === "Escape") onActivate(null);
+              }}
+            >
+              <title>{`${segment.ticker} · ${formatAllocation(segment.allocation)}`}</title>
+            </path>
+            <g className={styles.chartLogo} data-chart-logo={segment.ticker} data-muted={Boolean(active && active.ticker !== segment.ticker)} aria-hidden="true">
+              <defs><clipPath id={clipId}><circle cx={logo.x} cy={logo.y} r="15" /></clipPath></defs>
+              <circle cx={logo.x} cy={logo.y} r="19" fill="#fff" />
+              <image href={metadata.logoPath} x={logo.x - 15} y={logo.y - 15} width="30" height="30" preserveAspectRatio="xMidYMid meet" clipPath={`url(#${clipId})`} />
+            </g>
+            </g>
+          );
+        })}
+      </svg>
+      <div className={`${styles.donutCenter} ${styles.defaultCenter}`} hidden={Boolean(active)}>
+        <span className={styles.eyebrow}>Portfolio</span><strong className="font-serif">Allocation</strong>
       </div>
-      <div className={styles.tooltipSlot}>
-        {active ? <div className={styles.tooltip} role="tooltip">
-          <span><b>{assetMetadata[active.ticker].displayName}</b> <span className={styles.muted}>/ {active.ticker}</span></span>
-          <span>{formatAllocation(active.allocation)} of {allocationScope} <span aria-hidden="true">·</span> {formatUSD(active.valueUSD)} <span aria-hidden="true">·</span> {formatIDR(active.valueIDR)}</span>
-        </div> : <p className={styles.chartHint}>Explore a position to see where it fits.<br /><span>Hover, focus, or select an asset.</span></p>}
+      <div className={`${styles.donutCenter} ${styles.activeCenter}`} aria-live="polite" aria-atomic="true">
+        {active && <><span className={styles.eyebrow}>{active.ticker}</span><strong>{formatAllocation(active.allocation)}</strong></>}
       </div>
     </div>
   );

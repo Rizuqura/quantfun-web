@@ -1,24 +1,18 @@
-import type { PortfolioPosition, ResolvedPosition } from "./portfolio-types";
+import type { PortfolioPosition } from "./portfolio-types";
 
-export const formatUSD = (value: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
 export const formatIDR = (value: number) => `Rp${new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value)}`;
+export const formatUSD = (value: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", currencyDisplay: "code" }).format(value);
 export const formatAllocation = (value: number) => `${value.toFixed(2)}%`;
-export const formatCompactIDR = (value: number) => `Rp${new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 2 }).format(value)}`;
-export const formatSnapshotDate = (date: string) => new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${date}T00:00:00Z`));
+export const portfolioReportPath = (date: string) => `/reports/quantfun-portfolio-${date.slice(0, 7)}.pdf`;
+export const formatSnapshotDate = (date: string) => new Intl.DateTimeFormat("en-US", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${date}T00:00:00Z`));
+export const formatReportingPeriod = (date: string) => new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${date}T00:00:00Z`));
 
-export function portfolioTotals(positions: readonly PortfolioPosition[]) {
-  return {
-    valueIDR: positions.reduce((sum, position) => sum + position.valueIDR, 0),
-    valueUSD: positions.reduce((sum, position) => sum + Math.round(position.valueUSD * 100), 0) / 100,
-  };
+export function sortAllocations(positions: readonly PortfolioPosition[]): PortfolioPosition[] {
+  return [...positions].sort((a, b) => b.allocation - a.allocation);
 }
 
-export function resolveAllocations(positions: readonly PortfolioPosition[]): ResolvedPosition[] {
-  const total = portfolioTotals(positions).valueIDR;
-  return positions.map((position) => ({ ...position, allocation: position.allocation ?? (total > 0 ? position.valueIDR / total * 100 : 0) }));
-}
-
-export function allocationSegments(positions: readonly ResolvedPosition[]) {
+export function allocationSegments(positions: readonly PortfolioPosition[]) {
+  // Normalize geometry only: published labels retain the supplied rounded weights.
   const total = positions.reduce((sum, position) => sum + position.allocation, 0);
   let angle = -90;
   return positions.map((position) => {

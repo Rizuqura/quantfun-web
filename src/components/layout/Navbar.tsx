@@ -16,7 +16,7 @@ export default function Navbar() {
   const isPortfolio = pathname === "/portfolio";
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 min-h-nav py-2 flex items-center ${isPortfolio ? "text-[#efefea] bg-[#111313]/95 backdrop-blur-md border-b border-white/10" : "text-[#111111]"} ${isProject ? "bg-[#f3f2ee]/95 backdrop-blur-md border-b border-black/10" : ""}`}
+      className={`fixed top-0 left-0 right-0 z-50 min-h-nav py-2 flex items-center ${isPortfolio ? "print:hidden text-[#efefea] bg-[#111313]/95 backdrop-blur-md border-b border-white/10" : "text-[#111111]"} ${isProject ? "bg-[#f3f2ee]/95 backdrop-blur-md border-b border-black/10" : ""}`}
       role="navigation"
       aria-label="Main navigation"
       style={{ viewTransitionName: "navbar" }}
