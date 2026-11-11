@@ -7,4 +7,5 @@ export const assetMetadata: Record<Ticker, AssetMetadata> = {
   BTC: { displayName: "Bitcoin", color: "#d99b57", logoPath: "/ticker-logo/BTC.webp" },
   GOOGL: { displayName: "Alphabet Class A", color: "#aaa8c7", logoPath: "/ticker-logo/GOOGL.svg" },
   MSTR: { displayName: "Strategy Inc.", color: "#a96b48", logoPath: "/ticker-logo/MSTR.png" },
+  GOTO: { displayName: "GoTo Gojek Tokopedia", color: "#00aa6c", logoPath: "/ticker-logo/GOTO.png", logoBackground: "#00aa6c" },
 };

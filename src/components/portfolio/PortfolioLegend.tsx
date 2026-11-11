@@ -13,7 +13,7 @@ export default function PortfolioLegend({ positions, activeAsset, onActivate }: 
             onFocus={() => onActivate(position.ticker)} onBlur={() => onActivate(null)} onClick={() => onActivate(position.ticker)}
             onKeyDown={(event) => { if (event.key === "Escape") onActivate(null); }}>
             <span className={styles.assetMark}>
-              <img className={styles.assetLogo} src={assetMetadata[position.ticker].logoPath} alt="" width={38} height={38} />
+              <img className={styles.assetLogo} src={assetMetadata[position.ticker].logoPath} style={{ background: assetMetadata[position.ticker].logoBackground }} alt="" width={38} height={38} />
               <i className={styles.swatch} style={{ background: assetMetadata[position.ticker].color }} aria-hidden="true" />
             </span>
             <span className={styles.assetIdentity}><b>{position.ticker === "CASH" ? "Cash" : position.ticker}</b>{position.ticker !== "CASH" && <span>{assetMetadata[position.ticker].displayName}</span>}</span>

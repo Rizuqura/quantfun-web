@@ -6,9 +6,9 @@ dark palette, serif heading, navigation and allocation components.
 ## Public snapshot
 
 `src/lib/portfolio/portfolio-data.ts` is the canonical owner-supplied snapshot:
-November 1, 2026, total AUM Rp2,670,525, with six percentage allocations.
+November 1, 2026, total AUM Rp2,693,025, with seven percentage allocations.
 USD is the primary AUM display; IDR appears underneath. The estimated USD
-equivalent is USD 146.73, derived using the owner-supplied reporting rate of
+equivalent is USD 147.97, derived using the owner-supplied reporting rate of
 Rp18,200/USD. This is not a live FX rate. Update the working conversion when an
 approved USD valuation or rate is supplied. Conversion applies only to total AUM.
 Each position contains only its ticker and supplied allocation. Names and chart
@@ -20,11 +20,17 @@ For a future edition, update the date, total AUM and percentage allocations.
 The header and footer derive the reporting period/date from that snapshot.
 Update the route metadata in `src/app/portfolio/page.tsx` for the new edition.
 
-The supplied percentages total **99.99%**. Display labels retain their original
+The updated percentages total **100.01%**. Display labels retain their supplied
 two decimal places; SVG angles alone normalize the weights to a full circle.
 Cash appears as its own allocation. Display order is descending by weight.
 
-The public `S&P500` category combines the two index/ETF allocations at 33.95%.
+GOTO is included as additional capital at 0.84%. Existing allocations are
+approximate: the prior rounded weights are normalized by their 99.99% sum,
+then rebased proportionally to the new AUM and rounded to two decimal places.
+The public model stores only total AUM and percentage weights, with no position
+values. The reporting date of the existing November factsheet is retained.
+
+The public `S&P500` category combines the two index/ETF allocations at 33.67%.
 It is a reporting category for diversified index and thematic exposure, not a
 claim that every underlying instrument tracks the same benchmark. Underlying
 fund names, tickers and separate weights are omitted from the public data model.
@@ -33,7 +39,7 @@ fund names, tickers and separate weights are omitted from the public data model.
 
 `PortfolioPage` owns the active asset shared by `PortfolioDonut` and
 `PortfolioLegend`, composed by `PortfolioAllocationChart`. Pointer, touch and
-keyboard interactions show only tickers/names and percentages. All six labels
+keyboard interactions show only tickers/names and percentages. All seven labels
 remain visible independently of hover, and long names wrap on narrow screens.
 The former value tables, role charts, thesis cards, carousel and strategy model
 have been removed.
@@ -60,6 +66,10 @@ reused. The S&P500 logo is the owner-supplied red circular PNG in
 Logos use circular containers in the asset list and appear inside their matching
 donut slices. SVG clipping keeps the chart icons round, and midpoint placement
 keeps them separated. Chart icons do not intercept pointer or touch interactions.
+Small allocations use an outside circular badge with a short leader line so
+their logo does not obscure the slice. GOTO uses the official GoTo wordmark
+from https://www.gotocompany.com/_next/static/media/footer-logo.8fa29839.png
+on a green circular background.
 Alphabet icon source: https://commons.wikimedia.org/wiki/File:Abc.xyz_Favicon.svg.
 Cash uses a project-owned banknote SVG. Logos are stored locally so printing
 and downloads do not depend on third-party image requests.

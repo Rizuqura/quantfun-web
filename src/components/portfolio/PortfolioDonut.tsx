@@ -15,7 +15,11 @@ export default function PortfolioDonut({ positions, activeAsset, onActivate }: A
       <svg viewBox="0 0 400 400" role="group" aria-label="Portfolio allocation by asset" className={styles.donutSvg}>
         {allocationSegments(positions).map((segment, index) => {
           const metadata = assetMetadata[segment.ticker];
-          const logo = polarPoint(139, segment.midpoint);
+          // Small slices use an outside badge so their logo never hides the slice.
+          const isSmallSlice = segment.allocation < 5;
+          const logo = polarPoint(isSmallSlice ? 190 : 139, segment.midpoint);
+          const leaderStart = polarPoint(166, segment.midpoint);
+          const leaderEnd = polarPoint(171, segment.midpoint);
           const clipId = `${chartId}-logo-${index}`;
           return (
             <g key={segment.ticker}>
@@ -34,8 +38,9 @@ export default function PortfolioDonut({ positions, activeAsset, onActivate }: A
               <title>{`${segment.ticker} · ${formatAllocation(segment.allocation)}`}</title>
             </path>
             <g className={styles.chartLogo} data-chart-logo={segment.ticker} data-muted={Boolean(active && active.ticker !== segment.ticker)} aria-hidden="true">
+              {isSmallSlice && <line x1={leaderStart.x} y1={leaderStart.y} x2={leaderEnd.x} y2={leaderEnd.y} stroke={metadata.color} strokeWidth="1.5" />}
               <defs><clipPath id={clipId}><circle cx={logo.x} cy={logo.y} r="15" /></clipPath></defs>
-              <circle cx={logo.x} cy={logo.y} r="19" fill="#fff" />
+              <circle cx={logo.x} cy={logo.y} r="19" fill={metadata.logoBackground ?? "#fff"} />
               <image href={metadata.logoPath} x={logo.x - 15} y={logo.y - 15} width="30" height="30" preserveAspectRatio="xMidYMid meet" clipPath={`url(#${clipId})`} />
             </g>
             </g>

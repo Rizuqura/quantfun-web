@@ -13,14 +13,14 @@ const { assetMetadata } = require("../src/lib/portfolio/asset-metadata.ts");
 const { sortAllocations, allocationSegments, donutPath, formatAllocation, formatIDR, formatUSD, formatSnapshotDate, formatReportingPeriod } = require("../src/lib/portfolio/portfolio-utils.ts");
 
 const expectedAllocations = [
-  ["S&P500", 33.95], ["TSM", 20.48], ["CASH", 15.11],
-  ["BTC", 14.53], ["GOOGL", 8.09], ["MSTR", 7.83],
+  ["S&P500", 33.67], ["TSM", 20.31], ["CASH", 14.99],
+  ["BTC", 14.41], ["GOOGL", 8.02], ["MSTR", 7.77], ["GOTO", 0.84],
 ];
 
-test("November snapshot preserves AUM and the six public allocation weights", () => {
-  assert.equal(portfolioSnapshot.totalAUMIDR, 2670525);
-  assert.equal(formatIDR(portfolioSnapshot.totalAUMIDR), "Rp2,670,525");
-  assert.equal(formatUSD(portfolioSnapshot.totalAUMUSD).replace(/\s/g, ' '), "USD 146.73");
+test("November snapshot preserves AUM and the seven public allocation weights", () => {
+  assert.equal(portfolioSnapshot.totalAUMIDR, 2693025);
+  assert.equal(formatIDR(portfolioSnapshot.totalAUMIDR), "Rp2,693,025");
+  assert.equal(formatUSD(portfolioSnapshot.totalAUMUSD).replace(/\s/g, ' '), "USD 147.97");
   assert.equal(portfolioSnapshot.totalAUMUSD, portfolioSnapshot.totalAUMIDR / 18200);
   assert.equal(portfolioSnapshot.date, "2026-11-01");
   assert.equal(formatSnapshotDate(portfolioSnapshot.date), "November 1, 2026");
@@ -43,10 +43,10 @@ test("public snapshot contains only approved disclosure fields", () => {
   }
 });
 
-test("rounded weights total 99.99% while geometry closes a full ring without changing labels", () => {
+test("rounded weights total 100.01% while geometry closes a full ring without changing labels", () => {
   const positions = portfolioSnapshot.positions;
   const total = positions.reduce((sum, p) => sum + p.allocation, 0);
-  assert.ok(Math.abs(total - 99.99) < 1e-9);
+  assert.ok(Math.abs(total - 100.01) < 1e-9);
   assert.ok(Math.abs(100 - total) < 0.02);
   const segments = allocationSegments(positions);
   assert.equal(segments[0].start, -90);
@@ -58,6 +58,19 @@ test("rounded weights total 99.99% while geometry closes a full ring without cha
     assert.ok(!/NaN|Infinity/.test(donutPath(segment.start, segment.end)));
   });
   assert.deepEqual(allocationSegments([]), []);
+});
+
+test("GOTO capital is added to AUM and existing rounded weights are rebased proportionally", () => {
+  const previousTotal = 2670525;
+  const capitalAdded = portfolioSnapshot.totalAUMIDR - previousTotal;
+  assert.ok(capitalAdded > 0);
+  const previousWeights = [33.95, 20.48, 15.11, 14.53, 8.09, 7.83];
+  const previousWeightSum = previousWeights.reduce((sum, weight) => sum + weight, 0);
+  portfolioSnapshot.positions.slice(0, -1).forEach((position, index) => {
+    const rebased = previousWeights[index] / previousWeightSum * previousTotal / portfolioSnapshot.totalAUMIDR * 100;
+    assert.ok(Math.abs(position.allocation - rebased) <= 0.005);
+  });
+  assert.ok(Math.abs(portfolioSnapshot.positions.at(-1).allocation - capitalAdded / portfolioSnapshot.totalAUMIDR * 100) <= 0.005);
 });
 
 test("descending display order does not mutate a supplied snapshot", () => {

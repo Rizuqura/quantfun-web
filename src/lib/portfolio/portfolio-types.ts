@@ -1,9 +1,10 @@
-export type Ticker = "S&P500" | "TSM" | "CASH" | "BTC" | "GOOGL" | "MSTR";
+export type Ticker = "S&P500" | "TSM" | "CASH" | "BTC" | "GOOGL" | "MSTR" | "GOTO";
 
 export interface AssetMetadata {
   displayName: string;
   color: string;
   logoPath: string;
+  logoBackground?: string;
 }
 
 /** Public factsheet fields only; no asset values or private accounting data. */

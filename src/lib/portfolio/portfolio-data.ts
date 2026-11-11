@@ -1,6 +1,6 @@
 import type { PortfolioSnapshot } from "./portfolio-types";
 
-const totalAUMIDR = 2670525;
+const totalAUMIDR = 2693025;
 // Owner-supplied reporting conversion, not a live FX quote.
 const workingIDRPerUSD = 18200;
 
@@ -10,11 +10,13 @@ export const portfolioSnapshot: PortfolioSnapshot = {
   totalAUMIDR,
   totalAUMUSD: totalAUMIDR / workingIDRPerUSD,
   positions: [
-    { ticker: "S&P500", allocation: 33.95 },
-    { ticker: "TSM", allocation: 20.48 },
-    { ticker: "CASH", allocation: 15.11 },
-    { ticker: "BTC", allocation: 14.53 },
-    { ticker: "GOOGL", allocation: 8.09 },
-    { ticker: "MSTR", allocation: 7.83 },
+    // Existing weights rebased proportionally from the prior rounded snapshot.
+    { ticker: "S&P500", allocation: 33.67 },
+    { ticker: "TSM", allocation: 20.31 },
+    { ticker: "CASH", allocation: 14.99 },
+    { ticker: "BTC", allocation: 14.41 },
+    { ticker: "GOOGL", allocation: 8.02 },
+    { ticker: "MSTR", allocation: 7.77 },
+    { ticker: "GOTO", allocation: 0.84 },
   ],
 };

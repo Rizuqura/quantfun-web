@@ -76,7 +76,7 @@ const baseURL = process.env.PORTFOLIO_BASE_URL || 'http://localhost:3100';
     await send('Page.navigate', { url: baseURL + '/portfolio' });
     console.log('Portfolio opened.');
     for (let i = 0; i < 40; i++) {
-      if (await evaluate('document.querySelectorAll("[data-asset]").length === 6')) break;
+      if (await evaluate('document.querySelectorAll("[data-asset]").length === 7')) break;
       await sleep(200);
     }
     await evaluate('Promise.race([document.fonts.ready.then(() => true), new Promise(resolve => setTimeout(() => resolve(false), 3000))])');
@@ -85,19 +85,20 @@ const baseURL = process.env.PORTFOLIO_BASE_URL || 'http://localhost:3100';
     const text = await evaluate('document.querySelector("main").innerText');
     assert.match(text, /Monthly Portfolio\s+Factsheet/);
     assert.match(text, /Reporting date: November 1, 2026/);
-    assert.match(text, /Rp2,670,525/);
-    assert.match(text, /USD\s+146\.73/);
+    assert.match(text, /Rp2,693,025/);
+    assert.match(text, /USD\s+147\.97/);
     assert.match(text, /USD equivalent estimated/);
     assert.equal((text.match(/Rp/g) || []).length, 1);
     assert.doesNotMatch(text, /Strategic Trade|Trading Strategy|Investment Thesis|Conviction|Valuation|Return Target|CORE|POSITION TRADE/i);
     const labels = await evaluate('Array.from(document.querySelectorAll("main li button")).map(el => el.innerText.replace(/\\s+/g, " ").trim())');
     assert.deepEqual(labels, [
-      'S&P500 Diversified index & thematic exposure 33.95%', 'TSM TSMC 20.48%', 'Cash 15.11%',
-      'BTC Bitcoin 14.53%', 'GOOGL Alphabet Class A 8.09%', 'MSTR Strategy Inc. 7.83%',
+      'S&P500 Diversified index & thematic exposure 33.67%', 'TSM TSMC 20.31%', 'Cash 14.99%',
+      'BTC Bitcoin 14.41%', 'GOOGL Alphabet Class A 8.02%', 'MSTR Strategy Inc. 7.77%',
+      'GOTO GoTo Gojek Tokopedia 0.84%',
     ]);
     assert.equal(await evaluate('document.querySelectorAll("main svg").length'), 1);
-    assert.equal(await evaluate('document.querySelectorAll("main li img").length'), 6);
-    assert.equal(await evaluate('document.querySelectorAll("[data-chart-logo] image").length'), 6);
+    assert.equal(await evaluate('document.querySelectorAll("main li img").length'), 7);
+    assert.equal(await evaluate('document.querySelectorAll("[data-chart-logo] image").length'), 7);
     assert.equal(await evaluate('Array.from(document.querySelectorAll("main li img")).every(img => getComputedStyle(img).borderRadius === "50%")'), true);
     assert.equal(await evaluate(`Array.from(document.querySelectorAll('[data-chart-logo]')).every(mark => {
       const bounds = mark.querySelector('circle').getBoundingClientRect();
@@ -123,12 +124,12 @@ const baseURL = process.env.PORTFOLIO_BASE_URL || 'http://localhost:3100';
     await evaluate('document.querySelector("[data-asset=GOOGL]").focus()');
     await sleep(100);
     assert.equal(await evaluate('document.querySelector("main li:nth-child(5) button").getAttribute("aria-pressed")'), 'true');
-    assert.match(await evaluate('document.querySelector("[aria-live=polite]").innerText'), /8.09%/);
+    assert.match(await evaluate('document.querySelector("[aria-live=polite]").innerText'), /8.02%/);
     await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Escape', code: 'Escape' });
     assert.equal(await evaluate('document.querySelector("[data-asset=GOOGL]").getAttribute("aria-pressed")'), 'false');
     await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
     await evaluate('document.querySelector("main li:last-child button").click()');
-    assert.match(await evaluate('document.querySelector("[aria-live=polite]").innerText'), /7.83%/);
+    assert.match(await evaluate('document.querySelector("[aria-live=polite]").innerText'), /0.84%/);
     let printCalls = 0;
     await evaluate('window.print = () => { window.__printCalls = (window.__printCalls || 0) + 1; }; Array.from(document.querySelectorAll("button")).find(b => b.textContent.includes("Print / Save PDF")).click()');
     printCalls = await evaluate('window.__printCalls');
